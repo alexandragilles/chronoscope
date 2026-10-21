@@ -3843,6 +3843,7 @@ function personSheet(id) {
       (f.sp && f.sp.length ? '<dt>Conjoint(e)s</dt><dd>' + chips(f.sp) + '</dd>' : '') + (f.ch && f.ch.length ? '<dt>Enfants</dt><dd>' + chips(f.ch) + '</dd>' : '') + '</dl>';
   }
   if (typeof portraitHTML === 'function') h += portraitHTML(id);
+  if (typeof reportBtn === 'function') h += reportBtn(id);
   h += iconoHTML(id);
   if (pp) h += '<h3>À Rome</h3><p>' + chip(pp.id) + ' est pape de ' + pp.reign[0] + ' à ' + pp.reign[1] + '.</p>';
   if (same.length) h += '<h3>Vivait en même temps</h3><div class="chips">' + same.map(o => chip(o.id)).join('') + '</div>';
@@ -4419,6 +4420,7 @@ function viewArena() {
   const list = Object.keys(AR.players).map(id => Object.assign({ id: id }, AR.players[id])).filter(p => p.name).sort((a, b) => (b.xp || 0) - (a.xp || 0));
   h += '<h3>Classement général</h3>' + (list.length ? '<ol class="ladder">' + list.map((p, i) => '<li class="' + (p.id === MYID ? 'you' : '') + '"><span class="pos">' + (i + 1) + '</span>' + avatar(p.av, 36) +
     '<span class="nm"><b>' + esc(String(p.name).slice(0, 24)) + '</b><small>' + esc(String(p.rank || '')) + ' · ' + (p.done | 0) + '/15 actes</small></span><b class="xp">' + (p.xp | 0) + ' XP</b></li>').join('') + '</ol>' : '<p class="empty">Personne encore. Sois la première !</p>');
+  if (typeof ideasSection === 'function') h += ideasSection();
   return h;
 }
 function viewDuel() {
@@ -4637,6 +4639,86 @@ Object.assign(DO, {
 });
 /* ouvrir directement l'arène depuis une notification */
 if (location.hash === '#arena') { ui.tab = 'arena'; }
+
+/* BOÎTE À IDÉES : propositions, signalements d'erreurs, votes, statuts (admin) */
+const ID = { ideas: [], votes: {}, status: {}, admin: false, on: false, tab: 'idee', showDone: false };
+const STATUS = { nouveau: 'Nouveau', retenu: 'Retenu', fait: 'Fait', refuse: 'Refusé' };
+function initIdeas() {
+  if (ID.on || !DBX || !MYID) return; ID.on = true;
+  const rr = () => { if (ui.tab === 'arena' && !ui.duel) render(true); };
+  DBX.collection('ideas').onSnapshot(q => { ID.ideas = q.docs.map(d => Object.assign({ id: d.id }, d.data())).filter(x => x && typeof x.text === 'string'); rr(); }, () => {});
+  DBX.collection('votes').onSnapshot(q => { const o = {}; q.docs.forEach(d => { o[d.id] = d.data() || {}; }); ID.votes = o; rr(); }, () => {});
+  DBX.doc('admin/status').onSnapshot(s => { ID.status = (s.exists && s.data()) || {}; rr(); }, () => {});
+  if (window.CHRONO_SB) window.CHRONO_SB.from('admins').select('user_id').eq('user_id', MYID).maybeSingle().then(r => { ID.admin = !!(r && r.data); rr(); }, () => {});
+}
+function voteCount(id) { let n = 0; Object.keys(ID.votes).forEach(u => { if (ID.votes[u] && ID.votes[u][id]) n++; }); return n; }
+function stOf(id) { const s = ID.status[id]; return STATUS[s] ? s : 'nouveau'; }
+function ideasSection() {
+  if (!DBX || !MYID) return '';
+  initIdeas();
+  const list = ID.ideas.filter(x => (x.kind === 'erreur' ? 'erreur' : 'idee') === ID.tab);
+  const open = list.filter(x => ['fait', 'refuse'].indexOf(stOf(x.id)) < 0).sort((a, b) => voteCount(b.id) - voteCount(a.id) || (b.t || 0) - (a.t || 0));
+  const closed = list.filter(x => ['fait', 'refuse'].indexOf(stOf(x.id)) >= 0).sort((a, b) => (b.t || 0) - (a.t || 0));
+  const mine = ID.votes[MYID] || {};
+  const card = x => {
+    const st = stOf(x.id), n = voteCount(x.id), ref = x.ref && P[x.ref] ? P[x.ref] : null;
+    return '<li class="idea st-' + st + '"><div class="id-top"><span class="id-st">' + STATUS[st] + '</span>' + (ref ? '<button class="chip" data-do="person" data-id="' + esc(x.ref) + '">' + esc(ref.n) + '</button>' : '') + '</div>' +
+      '<p>' + esc(String(x.text).slice(0, 600)) + '</p><div class="id-bot"><small>' + esc(pname(x.by)) + '</small>' +
+      '<button class="vote' + (mine[x.id] ? ' on' : '') + '" data-do="idea-vote" data-id="' + esc(x.id) + '">+1 · ' + n + '</button></div>' +
+      (ID.admin ? '<div class="id-admin">' + Object.keys(STATUS).map(k => '<button class="chip' + (st === k ? ' on' : '') + '" data-do="idea-st" data-id="' + esc(x.id) + '" data-v="' + k + '">' + STATUS[k] + '</button>').join('') + '</div>' : '') + '</li>';
+  };
+  let h = '<div class="ar-head"><h3>Boîte à idées</h3><button class="btn sm" data-do="idea-new" data-k="' + ID.tab + '">' + (ID.tab === 'erreur' ? 'Signaler' : 'Proposer') + '</button></div>' +
+    seg([['idee', 'Idées'], ['erreur', 'Erreurs signalées']], ID.tab, 'idea-tab', 'v');
+  if (ID.admin) h += '<p class="hint">Tu es administratrice : change le statut de chaque proposition.</p>';
+  h += open.length ? '<ul class="ideas">' + open.map(card).join('') + '</ul>' : '<p class="empty">' + (ID.tab === 'erreur' ? 'Aucune erreur signalée.' : 'Aucune idée pour l\'instant. Lance la première !') + '</p>';
+  if (closed.length) h += '<button class="lnk" data-do="idea-done">' + (ID.showDone ? 'Masquer' : 'Voir') + ' les propositions traitées (' + closed.length + ')</button>' + (ID.showDone ? '<ul class="ideas">' + closed.map(card).join('') + '</ul>' : '');
+  return h;
+}
+function ideaSheet(kind, ref, msg) {
+  const p = ref && P[ref];
+  return '<h2>' + (kind === 'erreur' ? 'Signaler une erreur' : 'Proposer une idée') + '</h2>' +
+    (p ? '<p class="hint">Fiche : <b>' + esc(p.n) + '</b></p>' : '') +
+    '<p class="hint">' + (kind === 'erreur' ? 'Qu\'est-ce qui est faux ? Si possible, indique la bonne information et ta source.' : 'Une fonctionnalité, un personnage à ajouter, un défaut agaçant… Sois concret.') + '</p>' +
+    '<textarea id="itext" rows="5" maxlength="600" placeholder="' + (kind === 'erreur' ? 'Ex. La date du sacre est fausse : c\'est 1429, voir…' : 'Ex. Un mode révision chronométré') + '"></textarea>' +
+    (msg ? '<p class="note">' + esc(msg) + '</p>' : '') +
+    '<div class="nav"><button class="btn" data-do="idea-send" data-k="' + kind + '" data-ref="' + esc(ref || '') + '">Envoyer</button></div>';
+}
+function reportBtn(id) {
+  if (!DBX || !MYID) return '';
+  return '<div class="nav" style="justify-content:flex-start"><button class="btn ghost sm" data-do="idea-new" data-k="erreur" data-ref="' + id + '">Signaler une erreur</button></div>';
+}
+Object.assign(DO, {
+  'idea-tab': el => { ID.tab = el.getAttribute('data-v'); render(true); },
+  'idea-done': () => { ID.showDone = !ID.showDone; render(true); },
+  'idea-new': el => {
+    if (!S.prof.name) { toast('Choisis d\'abord ton nom de voyageur', 'rank'); openSheet(profileSheet()); return; }
+    openSheet(ideaSheet(el.getAttribute('data-k'), el.getAttribute('data-ref') || ''));
+  },
+  'idea-send': async el => {
+    const kind = el.getAttribute('data-k') === 'erreur' ? 'erreur' : 'idee', ref = el.getAttribute('data-ref') || '';
+    const text = ($('#itext').value || '').trim().slice(0, 600);
+    if (text.length < 8) { openSheet(ideaSheet(kind, ref, 'Écris un peu plus, s\'il te plaît.')); return; }
+    el.disabled = true;
+    try {
+      const d = { by: MYID, kind: kind, text: text, t: Date.now() }; if (ref && P[ref]) d.ref = ref;
+      await DBX.collection('ideas').add(d);
+      closeSheet(); toast('Merci ! Proposition envoyée', 'xp');
+      ID.tab = kind; if (ui.tab !== 'arena') { ui.tab = 'arena'; } render();
+    } catch (e) { openSheet(ideaSheet(kind, ref, 'Envoi impossible, réessaie.')); }
+  },
+  'idea-vote': async el => {
+    const id = el.getAttribute('data-id'), mine = Object.assign({}, ID.votes[MYID] || {});
+    if (mine[id]) delete mine[id]; else mine[id] = 1;
+    ID.votes[MYID] = mine; render(true);
+    try { await DBX.doc('votes/' + MYID).set(mine); } catch (e) { toast('Vote non enregistré', 'rank'); }
+  },
+  'idea-st': async el => {
+    if (!ID.admin) return;
+    const st = Object.assign({}, ID.status); st[el.getAttribute('data-id')] = el.getAttribute('data-v');
+    ID.status = st; render(true);
+    try { await DBX.doc('admin/status').set(st); } catch (e) { toast('Statut non enregistré', 'rank'); }
+  }
+});
 
 /* ---------- démarrage ---------- */
 D.body.insertAdjacentHTML('afterbegin', SPRITE);

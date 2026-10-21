@@ -408,6 +408,18 @@ body[data-era="renaissance"] #head, body[data-era="classique"] #head { border-bo
 .msgbox b { font-family: var(--fh); }
 .field { display: block; width: 100%; font: 1rem var(--fb); padding: 11px 12px; margin-top: 8px; border-radius: 10px; border: 2px solid var(--line); background: var(--card); color: var(--ink); }
 .login { margin-top: 6px; }
+.ideas { list-style: none; padding: 0; margin: 8px 0; display: grid; gap: 8px; }
+.idea { background: var(--card); border: 2px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+.idea p { margin: 6px 0; white-space: pre-wrap; word-break: break-word; }
+.id-top, .id-bot { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.id-bot { justify-content: space-between; }
+.id-st { font-family: var(--fh); font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: var(--accent-soft); }
+.st-retenu .id-st { background: var(--gold); color: #231B14; } .st-fait .id-st { background: var(--good-bg); } .st-refuse .id-st { background: var(--bad-bg); }
+.st-fait, .st-refuse { opacity: .75; }
+.vote { font-family: var(--fh); font-size: .8rem; padding: 6px 12px; border-radius: 999px; border: 2px solid var(--line); }
+.vote.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.id-admin { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); }
+#itext { font: 1rem var(--fb); }
 [hidden] { display: none !important; }
 </style>
 <header id="head"></header>
@@ -417,7 +429,7 @@ body[data-era="renaissance"] #head, body[data-era="classique"] #head { border-bo
 <div id="toasts" aria-live="polite"></div>
 <script src="supabase.js"></script>
 <script src="config.js"></script>
-<script src="shim.js?v=mviovpam"></script>
-<script src="app.js?v=mviovpam"></script>
+<script src="shim.js?v=mviqva23"></script>
+<script src="app.js?v=mviqva23"></script>
 </body>
 </html>
