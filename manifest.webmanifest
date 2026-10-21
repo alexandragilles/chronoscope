@@ -1,0 +1,16 @@
+{
+  "name": "Le Chronoscope",
+  "short_name": "Chronoscope",
+  "description": "L'histoire de France de Clovis à 1789, en jeu.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F2E9D2",
+  "theme_color": "#16226A",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
