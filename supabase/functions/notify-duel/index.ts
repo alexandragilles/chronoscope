@@ -1,7 +1,7 @@
 // Envoie une notification au joueur visé par un défi personnel.
 // Déclenchée par un Database Webhook sur l'insertion dans public.docs.
 import webpush from "npm:web-push@3.6.7";
-import { createClient } from "npm:@supabase/supabase-js@2.45.4";
+import { createClient } from "npm:@supabase/supabase-js@2.117.2";
 
 const ROMAN = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV"];
 
