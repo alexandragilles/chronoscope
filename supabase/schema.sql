@@ -52,5 +52,4 @@ drop policy if exists push_own on public.push_subs;
 create policy push_own on public.push_subs for all to authenticated
   using (user_id = auth.uid()) with check (user_id = auth.uid());
 
--- Mises à jour en direct (classement, défis)
-alter publication supabase_realtime add table public.docs;
+-- Mises à jour en direct : à activer ensuite dans Database > Publications > supabase_realtime > docs.
