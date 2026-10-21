@@ -10,7 +10,11 @@ Deno.serve(async (req) => {
   const body = await req.json().catch(() => ({}));
   const rec = body.record;
   if (!rec || rec.col !== "duels" || !rec.data || !rec.data.to || body.type !== "INSERT") return new Response("ignored");
-  const sb = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+  const env = Deno.env.toObject();
+  let key = env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_SECRET_KEY || "";
+  if (!key && env.SUPABASE_SECRET_KEYS) { try { const o = JSON.parse(env.SUPABASE_SECRET_KEYS); key = Object.values(o)[0] as string; } catch (_e) { /* format inconnu */ } }
+  if (!key) return new Response("missing service key", { status: 500 });
+  const sb = createClient(env.SUPABASE_URL, key);
   const { data: player } = await sb.from("docs").select("data").eq("path", "players/" + rec.data.by).maybeSingle();
   const name = String(player?.data?.name || "Un joueur").slice(0, 24);
   const act = ROMAN[Number(rec.data.act) || 0] || "";
