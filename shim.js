@@ -86,6 +86,8 @@
   window.CHRONO_AUTH = {
     available: !!sb,
     session: session,
+    signUp: async (email, pass) => { const r = await sb.auth.signUp({ email: email, password: pass }); if (r.error) throw r.error; sessionP = null; return r.data; },
+    signIn: async (email, pass) => { const r = await sb.auth.signInWithPassword({ email: email, password: pass }); if (r.error) throw r.error; sessionP = null; return r.data; },
     sendCode: async (email) => { const r = await sb.auth.signInWithOtp({ email: email, options: { shouldCreateUser: true } }); if (r.error) throw r.error; },
     verify: async (email, code) => { const r = await sb.auth.verifyOtp({ email: email, token: code, type: 'email' }); if (r.error) throw r.error; return r.data; },
     signOut: async () => { await sb.auth.signOut(); },

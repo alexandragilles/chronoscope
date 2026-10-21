@@ -4599,28 +4599,33 @@ function pushButton() {
 let pushOn = false;
 if (window.CHRONO_PUSH) window.CHRONO_PUSH.isOn().then(v => { pushOn = v; });
 function isIOS() { return /iPhone|iPad|iPod/.test(navigator.userAgent); }
-function loginSheet(step, email, msg) {
-  if (step === 2) return '<h2>Code de connexion</h2><p class="hint">Un code à 6 chiffres a été envoyé à ' + esc(email) + '. Pense à regarder dans les indésirables.</p>' +
-    '<input id="lcode" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="123456" class="field">' + (msg ? '<p class="note">' + esc(msg) + '</p>' : '') +
-    '<div class="nav"><button class="btn ghost" data-do="login-open">Changer d\'adresse</button><button class="btn" data-do="login-verify" data-email="' + esc(email) + '">Valider</button></div>';
-  return '<h2>Se connecter</h2><p class="hint">Pas de mot de passe : tu reçois un code par e-mail. Le compte est créé automatiquement la première fois.</p>' +
-    '<input id="lemail" type="email" autocomplete="email" placeholder="ton@email.fr" class="field" value="' + esc(email || '') + '">' + (msg ? '<p class="note">' + esc(msg) + '</p>' : '') +
-    '<div class="nav"><button class="btn" data-do="login-send">Recevoir un code</button></div>';
+function loginSheet(mode, email, msg) {
+  const signup = mode === 'signup';
+  return '<h2>' + (signup ? 'Créer un compte' : 'Se connecter') + '</h2>' +
+    '<p class="hint">' + (signup ? 'Choisis un e-mail et un mot de passe (8 caractères minimum).' : 'Avec ton e-mail et ton mot de passe.') + '</p>' +
+    '<input id="lemail" type="email" autocomplete="email" placeholder="ton@email.fr" class="field" value="' + esc(email || '') + '">' +
+    '<input id="lpass" type="password" autocomplete="' + (signup ? 'new-password' : 'current-password') + '" placeholder="Mot de passe" class="field">' +
+    (msg ? '<p class="note">' + esc(msg) + '</p>' : '') +
+    '<div class="nav"><button class="btn ghost" data-do="login-mode" data-m="' + (signup ? 'login' : 'signup') + '">' + (signup ? 'J\'ai déjà un compte' : 'Créer un compte') + '</button>' +
+    '<button class="btn" data-do="login-go" data-m="' + (signup ? 'signup' : 'login') + '">' + (signup ? 'Créer' : 'Se connecter') + '</button></div>';
 }
 Object.assign(DO, {
-  'login-open': () => openSheet(loginSheet(1, '')),
-  'login-send': async el => {
-    const email = ($('#lemail').value || '').trim();
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { openSheet(loginSheet(1, email, 'Adresse e-mail invalide.')); return; }
-    el.disabled = true; el.textContent = 'Envoi…';
-    try { await window.CHRONO_AUTH.sendCode(email); openSheet(loginSheet(2, email)); }
-    catch (e) { openSheet(loginSheet(1, email, 'Envoi impossible : ' + (e.message || 'réessaie dans une minute.'))); }
-  },
-  'login-verify': async el => {
-    const email = el.getAttribute('data-email'), code = ($('#lcode').value || '').replace(/\D/g, '');
-    el.disabled = true; el.textContent = 'Vérification…';
-    try { await window.CHRONO_AUTH.verify(email, code); location.reload(); }
-    catch (e) { openSheet(loginSheet(2, email, 'Code incorrect ou expiré.')); }
+  'login-open': () => openSheet(loginSheet('login', '')),
+  'login-mode': el => openSheet(loginSheet(el.getAttribute('data-m'), ($('#lemail') || {}).value || '')),
+  'login-go': async el => {
+    const m = el.getAttribute('data-m'), email = ($('#lemail').value || '').trim(), pass = $('#lpass').value || '';
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { openSheet(loginSheet(m, email, 'Adresse e-mail invalide.')); return; }
+    if (pass.length < 8) { openSheet(loginSheet(m, email, 'Le mot de passe doit faire au moins 8 caractères.')); return; }
+    el.disabled = true; el.textContent = '…';
+    try {
+      if (m === 'signup') await window.CHRONO_AUTH.signUp(email, pass); else await window.CHRONO_AUTH.signIn(email, pass);
+      const s2 = await window.CHRONO_SB.auth.getSession();
+      if (!(s2.data && s2.data.session)) { openSheet(loginSheet('login', email, 'Compte créé. Confirme ton adresse avec l\'e-mail reçu, puis connecte-toi.')); return; }
+      location.reload();
+    } catch (e) {
+      const t = String(e && e.message || '');
+      openSheet(loginSheet(m, email, /Invalid login/i.test(t) ? 'E-mail ou mot de passe incorrect.' : /already/i.test(t) ? 'Ce compte existe déjà : connecte-toi.' : 'Échec : ' + t));
+    }
   },
   logout: async () => { await window.CHRONO_AUTH.signOut(); location.reload(); },
   'push-on': async el => {
