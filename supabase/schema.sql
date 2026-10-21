@@ -53,6 +53,4 @@ create policy push_own on public.push_subs for all to authenticated
   using (user_id = auth.uid()) with check (user_id = auth.uid());
 
 -- Mises à jour en direct (classement, défis)
-do $$ begin
-  alter publication supabase_realtime add table public.docs;
-exception when duplicate_object then null; end $$;
+alter publication supabase_realtime add table public.docs;
