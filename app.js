@@ -813,8 +813,8 @@ const TALK = {
       { say: "Un de mes soldats vient de briser un vase d'église que l'évêque réclame. Je dois avaler l'affront devant toute l'armée. Que me conseilles-tu ?",
         learn: "Selon Grégoire de Tours, Clovis attend un an, puis tue le soldat lors de la revue des armes. L'histoire est écrite environ un siècle plus tard : c'est une tradition, pas un rapport de police.",
         opts: [
-          { t: "Patience. Attends un an et une revue des armes.", r: "Tu penses comme moi. Pour une voyageuse, c'est inquiétant. L'an prochain, il comprendra.", x: 10 },
-          { t: "Rends-lui son vase et demande pardon.", r: "Demander pardon à un soldat ? Tu as été élevée par des moines.", x: 3 },
+          { t: "Patience. Attends un an et une revue des armes.", r: "Tu penses comme moi. {Pour un voyageur|Pour une voyageuse}, c'est inquiétant. L'an prochain, il comprendra.", x: 10 },
+          { t: "Rends-lui son vase et demande pardon.", r: "Demander pardon à un soldat ? Tu as été {élevé|élevée} par des moines.", x: 3 },
           { t: "Demande-lui poliment de payer.", r: "Poliment ? Tu parles comme un évêque. Je n'oublie rien, moi.", x: 3 }
         ] },
       { say: "Ma femme Clotilde veut que je me fasse baptiser. Mes guerriers sont païens, les évêques ont des cités. Que dois-je choisir ?",
@@ -2159,7 +2159,7 @@ TALK[9] = { who: "philippe4", place: "Palais de la Cité, octobre 1307",
     { say: "Le pape prétend que les rois lui sont soumis. Mon royaume me suivra-t-il contre Rome ?",
       learn: "En 1302, Philippe le Bel réunit des représentants des nobles, du clergé et des villes pour soutenir sa politique face à Boniface VIII. On y voit les premiers états généraux.",
       opts: [{ t: "Réunis nobles, clergé et bourgeois pour qu'ils te soutiennent publiquement.", r: "C'est fait depuis 1302. Ils ont tous signé. Le pape n'avait pas prévu les bourgeois.", x: 10 },
-        { t: "Demande pardon au pape.", r: "Nogaret, notez : la voyageuse est guelfe.", x: 3 },
+        { t: "Demande pardon au pape.", r: "Nogaret, notez : {le voyageur|la voyageuse} est guelfe.", x: 3 },
         { t: "Ignore-le.", r: "Ignorer un pape, c'est lui laisser les sermons. Je préfère avoir le dernier mot.", x: 3 }] },
     { say: "Demain, mes officiers ouvriront des lettres scellées dans tout le royaume. Que doivent-elles ordonner ?",
       learn: "Le vendredi 13 octobre 1307, tous les Templiers du royaume sont arrêtés en même temps. Les aveux obtenus sous la torture servent à faire supprimer l'ordre en 1312.",
@@ -2185,7 +2185,7 @@ TALK[10] = { who: "jeanne", place: "Chinon, mars 1429",
     { say: "Que deviendrai-je, toi qui viens de loin ?",
       learn: "Capturée en mai 1430, Jeanne est jugée à Rouen par l'évêque Cauchon et brûlée le 30 mai 1431. Réhabilitée en 1456, elle est canonisée en 1920.",
       opts: [{ t: "Tu seras trahie et brûlée, puis réhabilitée et faite sainte.", r: "Elle reste silencieuse un moment. « Alors il faut faire vite. »", x: 10 },
-        { t: "Tu vivras heureuse en Lorraine.", r: "Tu mens mal, voyageuse. Mais c'est gentil.", x: 3 },
+        { t: "Tu vivras heureuse en Lorraine.", r: "Tu mens mal, {voyageur|voyageuse}. Mais c'est gentil.", x: 3 },
         { t: "Je ne peux pas te le dire.", r: "Ce silence-là en dit beaucoup.", x: 5 }] }
   ],
   outro: "Un héraut appelle son nom. Jeanne se retourne, redresse les épaules et entre dans la grande salle. Le Chronoscope ne fait aucune blague cette fois." };
@@ -3161,7 +3161,9 @@ const $$ = (s, r) => Array.prototype.slice.call((r || D).querySelectorAll(s));
 const P = {}, EV = {};
 PEOPLE.forEach(p => { P[p.id] = p; });
 EVENTS.forEach(e => { EV[e.id] = e; });
-const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+function G(m, f) { let g = 'f'; try { g = S.prof.g; } catch (e) { /* pas encore prêt */ } return g === 'm' ? m : f; }
+function gx(s) { return String(s).replace(/\{([^|{}]*)\|([^|{}]*)\}/g, (_, m, f) => G(m, f)); }
+const esc = s => gx(String(s)).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; };
 const pick = (a, n) => shuffle(a).slice(0, n);
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -3170,7 +3172,7 @@ const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 
 
 /* ---------- état et sauvegarde ---------- */
 const KEY = 'chronoscope.v1';
-const blank = () => ({ xp: 0, streak: { last: null, n: 0 }, day: { d: null, xp: 0 }, acts: {}, seen: {}, srs: {}, badges: {}, stats: { reviews: 0, yrs: {} }, img: {}, fc: {}, prof: { name: '', av: 'a0' }, explore: false, t: 0 });
+const blank = () => ({ xp: 0, streak: { last: null, n: 0 }, day: { d: null, xp: 0 }, acts: {}, seen: {}, srs: {}, badges: {}, stats: { reviews: 0, yrs: {} }, img: {}, fc: {}, prof: { name: '', av: 'a0', g: '' }, explore: false, t: 0 });
 let S = blank();
 function normalize() {
   const b = blank();
@@ -3180,7 +3182,7 @@ function normalize() {
   S.day = Object.assign({ d: null, xp: 0 }, S.day || {});
   S.img = S.img || {};
   S.fc = S.fc || {};
-  S.prof = Object.assign({ name: '', av: 'a0' }, S.prof || {});
+  S.prof = Object.assign({ name: '', av: 'a0', g: '' }, S.prof || {});
 }
 try { const raw = localStorage.getItem(KEY); if (raw) S = JSON.parse(raw); } catch (e) { S = blank(); }
 normalize();
@@ -3226,12 +3228,12 @@ function ds(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStar
 const today = () => ds(new Date());
 function addDays(n) { const d = new Date(); d.setDate(d.getDate() + n); return ds(d); }
 function streakNow() { if (S.streak.last === today() || S.streak.last === addDays(-1)) return S.streak.n; return 0; }
-const RANKS = [['Paysanne', 0], ['Page', 50], ['Écuyère', 130], ['Chevalière', 250], ['Dame de cour', 420], ['Chancelière', 620], ['Conseillère du roi', 850], ['Régente', 1100], ['Maîtresse du Temps', 1400]];
+const RANKS = [['{Paysan|Paysanne}', 0], ['Page', 50], ['{Écuyer|Écuyère}', 130], ['{Chevalier|Chevalière}', 250], ['{Seigneur de cour|Dame de cour}', 420], ['{Chancelier|Chancelière}', 620], ['{Conseiller du roi|Conseillère du roi}', 850], ['{Régent|Régente}', 1100], ['{Maître du Temps|Maîtresse du Temps}', 1400]];
 function rank(xp) {
   let i = 0;
   for (let k = 0; k < RANKS.length; k++) if (xp >= RANKS[k][1]) i = k;
   const cur = RANKS[i][1], nx = RANKS[i + 1];
-  return { i: i, n: RANKS[i][0], cur: cur, next: nx ? nx[1] : null, nn: nx ? nx[0] : null, pct: nx ? Math.round(100 * (xp - cur) / (nx[1] - cur)) : 100 };
+  return { i: i, n: gx(RANKS[i][0]), cur: cur, next: nx ? nx[1] : null, nn: nx ? gx(nx[0]) : null, pct: nx ? Math.round(100 * (xp - cur) / (nx[1] - cur)) : 100 };
 }
 const DAILY_GOAL = 40;
 function touchDay() {
@@ -3251,7 +3253,7 @@ function addXp(n, why) {
   S.xp += n; S.day.xp += n;
   toast('+' + n + ' XP' + (why ? ' · ' + why : ''), 'xp');
   const after = rank(S.xp).i;
-  if (after > before) toast('Nouveau rang : ' + RANKS[after][0], 'rank');
+  if (after > before) toast('Nouveau rang : ' + gx(RANKS[after][0]), 'rank');
   checkBadges();
   save();
   renderHead();
@@ -3316,7 +3318,7 @@ function toast(msg, kind) {
   const box = $('#toasts'); if (!box) return;
   const el = D.createElement('div');
   el.className = 'toast ' + (kind || '');
-  el.textContent = msg;
+  el.textContent = gx(msg);
   box.appendChild(el);
   while (box.children.length > 3) box.removeChild(box.firstChild);
   setTimeout(() => { if (el.parentNode) el.parentNode.removeChild(el); }, 2600);
@@ -4408,12 +4410,14 @@ function secs(ms) { return Math.round(ms / 1000) + ' s'; }
 /* ---------- vues ---------- */
 function viewArena() {
   if (ui.duel) return viewDuel();
+  if (ui.corr && typeof viewCorr === 'function' && DBX && MYID) return viewCorr();
   let h = '<h1 class="h1">L\'arène</h1>';
   if (!DBX || !MYID) return h + (typeof loginCard === 'function' ? loginCard() : '<p class="empty">L\'arène a besoin d\'un compte Claude connecté. Ta progression solo, elle, fonctionne partout.</p>');
   if (AR.err) h += '<p class="note">' + esc(AR.err) + '</p>';
-  h += '<section class="me-card">' + avatar(S.prof.av, 64) + '<div><b>' + esc(S.prof.name || 'Choisis ton nom de voyageur') + '</b><small>' + esc(rank(S.xp).n) + ' · ' + S.xp + ' XP</small></div>' +
+  h += '<section class="me-card">' + avatar(S.prof.av, 64) + '<div><b>' + esc(S.prof.name || 'Choisis ton nom de {voyageur|voyageuse}') + '</b><small>' + esc(rank(S.xp).n) + ' · ' + S.xp + ' XP</small></div>' +
     '<button class="btn sm ghost" data-do="profile">' + (S.prof.name ? 'Modifier' : 'Créer') + '</button></section>';
   if (!S.prof.name) return h + '<p class="hint">Choisis un pseudo et un blason pour apparaître au classement et lancer des défis.</p>';
+  if (typeof corrCard === 'function') h += corrCard();
   // défis
   h += '<div class="ar-head"><h3>Défis</h3><button class="btn sm" data-do="duel-new">Lancer un défi</button></div>';
   if (typeof pushNudge === 'function') h += pushNudge();
@@ -4432,8 +4436,7 @@ function viewArena() {
   // classement
   const list = Object.keys(AR.players).map(id => Object.assign({ id: id }, AR.players[id])).filter(p => p.name).sort((a, b) => (b.xp || 0) - (a.xp || 0));
   h += '<h3>Classement général</h3>' + (list.length ? '<ol class="ladder">' + list.map((p, i) => '<li class="' + (p.id === MYID ? 'you' : '') + '"><span class="pos">' + (i + 1) + '</span>' + avatar(p.av, 36) +
-    '<span class="nm"><b>' + esc(String(p.name).slice(0, 24)) + '</b><small>' + esc(String(p.rank || '')) + ' · ' + (p.done | 0) + '/15 actes</small></span><b class="xp">' + (p.xp | 0) + ' XP</b></li>').join('') + '</ol>' : '<p class="empty">Personne encore. Sois la première !</p>');
-  if (typeof salonSection === 'function') h += salonSection();
+    '<span class="nm"><b>' + esc(String(p.name).slice(0, 24)) + '</b><small>' + esc(String(p.rank || '')) + ' · ' + (p.done | 0) + '/15 actes</small></span><b class="xp">' + (p.xp | 0) + ' XP</b></li>').join('') + '</ol>' : '<p class="empty">' + gx('Personne encore. {Sois le premier|Sois la première} !') + '</p>');
   if (typeof ideasSection === 'function') h += ideasSection();
   return h;
 }
@@ -4457,7 +4460,7 @@ function viewDuel() {
   return h + '<p class="hint">Le chrono départage les ex æquo. Une seule tentative par défi.</p></section>';
 }
 function profileEditor() {
-  let h = '<h3>Mon blason</h3><div class="pe"><label class="pe-l">Nom de voyageur<input id="pname" maxlength="24" value="' + esc(S.prof.name) + '" placeholder="Ex. Aliénor des Bois" autocomplete="off"></label>' +
+  let h = (typeof genderRow === 'function' ? genderRow() : '') + '<h3>Mon blason</h3><div class="pe"><label class="pe-l">' + gx('Nom de {voyageur|voyageuse}') + '<input id="pname" maxlength="24" value="' + esc(S.prof.name) + '" placeholder="Ex. Aliénor des Bois" autocomplete="off"></label>' +
     '<div class="avgrid">' + AVATARS.map(a => '<button class="avpick' + (S.prof.av === a.id ? ' on' : '') + '" data-do="av-pick" data-v="' + a.id + '" aria-label="Blason ' + a.s + '">' + avatar(a.id, 46) + '</button>').join('') + '</div>';
   h += '<div class="upl"><label class="btn ghost sm">Utiliser une photo<input type="file" accept="image/*" data-avup="1" hidden></label>' + (S.prof.av.indexOf('data:') === 0 ? '<span class="upl-st">Photo active</span>' : '') + '<span class="upl-st" id="avst"></span></div>';
   h += '<div class="nav"><button class="btn" data-do="prof-save">Enregistrer</button></div></div>';
@@ -4683,7 +4686,7 @@ function ideasSection() {
   };
   let h = '<div class="ar-head"><h3>Boîte à idées</h3><button class="btn sm" data-do="idea-new" data-k="' + ID.tab + '">' + (ID.tab === 'erreur' ? 'Signaler' : 'Proposer') + '</button></div>' +
     seg([['idee', 'Idées'], ['erreur', 'Erreurs signalées']], ID.tab, 'idea-tab', 'v');
-  if (ID.admin) h += '<p class="hint">Tu es administratrice : change le statut de chaque proposition.</p>';
+  if (ID.admin) h += '<p class="hint">' + gx('Tu es {administrateur|administratrice}') + ' : change le statut de chaque proposition.</p>';
   h += open.length ? '<ul class="ideas">' + open.map(card).join('') + '</ul>' : '<p class="empty">' + (ID.tab === 'erreur' ? 'Aucune erreur signalée.' : 'Aucune idée pour l\'instant. Lance la première !') + '</p>';
   if (closed.length) h += '<button class="lnk" data-do="idea-done">' + (ID.showDone ? 'Masquer' : 'Voir') + ' les propositions traitées (' + closed.length + ')</button>' + (ID.showDone ? '<ul class="ideas">' + closed.map(card).join('') + '</ul>' : '');
   return h;
@@ -4706,7 +4709,7 @@ Object.assign(DO, {
   'idea-tab': el => { ID.tab = el.getAttribute('data-v'); render(true); },
   'idea-done': () => { ID.showDone = !ID.showDone; render(true); },
   'idea-new': el => {
-    if (!S.prof.name) { toast('Choisis d\'abord ton nom de voyageur', 'rank'); openSheet(profileSheet()); return; }
+    if (!S.prof.name) { toast('Choisis d\'abord ton nom de {voyageur|voyageuse}', 'rank'); openSheet(profileSheet()); return; }
     openSheet(ideaSheet(el.getAttribute('data-k'), el.getAttribute('data-ref') || ''));
   },
   'idea-send': async el => {
@@ -4752,26 +4755,26 @@ const SCENES = {
     seal: ['Elle t\'avoue qu\'elle a demandé elle-même l\'annulation, dès Antioche, des années avant que les évêques ne s\'en mêlent.', 'Elle te confie qu\'un messager est déjà parti pour l\'Anjou, la veille même du concile.', 'Elle te glisse, presque en riant : « Si je n\'épouse pas Henri, ce sont ses ennemis qui m\'épouseront de force. Autant choisir mon roi. »'],
     start: ['a1', 'b1', 'c1', 'd1'],
     nodes: {
-      a1: { mood: 'froid', say: 'Encore un curieux. Les évêques sont partis, voyageur. Si tu viens voir pleurer la reine de France, tu arrives trop tard : je ne le suis plus depuis ce matin.',
+      a1: { mood: 'froid', say: '{Encore un curieux|Encore une curieuse}. Les évêques sont partis, {voyageur|voyageuse}. Si tu viens voir pleurer la reine de France, tu arrives trop tard : je ne le suis plus depuis ce matin.',
         opts: [
           { t: 'Je ne viens pas vous voir pleurer. Je viens vous écouter.', tr: 8, go: 'a2', j: 'Je l\'ai trouvée à la fenêtre, droite comme une lance. Je lui ai dit que je venais l\'écouter, et j\'ai cru voir l\'ombre d\'un sourire.' },
-          { t: 'Majesté, c\'est une humiliation terrible.', tr: -4, go: 'a2', r: 'Une humiliation ? Pour qui, voyageur ? Regarde-les sortir. Ils croient m\'avoir renvoyée. Je repars avec l\'Aquitaine.', j: 'J\'ai parlé d\'humiliation. Elle m\'a corrigé sèchement : elle repart avec l\'Aquitaine, et c\'est le roi qui perd.' },
-          { t: 'Pourquoi le mariage est-il annulé ?', tr: 2, go: 'a2', j: 'J\'ai posé la question naïve du voyageur : pourquoi annuler un mariage de quinze ans ?' }
+          { t: 'Majesté, c\'est une humiliation terrible.', tr: -4, go: 'a2', r: 'Une humiliation ? Pour qui, {voyageur|voyageuse} ? Regarde-les sortir. Ils croient m\'avoir renvoyée. Je repars avec l\'Aquitaine.', j: 'J\'ai parlé d\'humiliation. Elle m\'a {corrigé|corrigée} sèchement : elle repart avec l\'Aquitaine, et c\'est le roi qui perd.' },
+          { t: 'Pourquoi le mariage est-il annulé ?', tr: 2, go: 'a2', j: 'J\'ai posé la question naïve du {voyageur|voyageuse} : pourquoi annuler un mariage de quinze ans ?' }
         ] },
       a2: { mood: 'calme', say: 'Officiellement ? Nous serions cousins au quatrième degré. Les évêques l\'ont découvert, figure-toi, après quinze ans de mariage et deux filles. L\'Église a parfois une mémoire étonnamment lente.',
         fact: { k: 'fait', t: 'Le concile de Beaugency annule le mariage le 21 mars 1152, pour consanguinité.', q: 'Pour quel motif officiel le mariage de Louis VII et d\'Aliénor est-il annulé en 1152 ?', a: 'La consanguinité : ils sont cousins au quatrième degré. Annulation prononcée au concile de Beaugency, le 21 mars 1152.' },
         opts: [
-          { t: 'Et la vraie raison ?', tr: 6, go: 'a3', j: 'Le motif officiel est la parenté. J\'ai demandé la vraie raison, et elle m\'a jaugé du regard.' },
+          { t: 'Et la vraie raison ?', tr: 6, go: 'a3', j: 'Le motif officiel est la parenté. J\'ai demandé la vraie raison, et elle m\'a {jaugé|jaugée} du regard.' },
           { t: 'Vos deux filles, que vont-elles devenir ?', tr: 4, go: 'a3', r: 'Marie et Alix restent avec leur père. Ce sont des filles de France. Je ne les emmène pas. Ne me demande pas ce que cela me coûte.', j: 'Elle laisse ses deux filles, Marie et Alix, au roi. Elle m\'a interdit de lui demander ce que cela lui coûte.' }
         ] },
       a3: { mood: 'tendu', say: 'La vraie raison tient en un mot : un fils. Louis n\'en a pas eu de moi. Et puis… disons que j\'ai épousé un roi, et que j\'ai trouvé un moine.',
         fact: { k: 'legende', t: '« J\'ai épousé un roi, j\'ai trouvé un moine » : la formule est rapportée par des chroniqueurs, mais rien ne prouve qu\'elle l\'ait dite ainsi.', q: 'Quelle phrase célèbre, peut-être légendaire, attribue-t-on à Aliénor sur Louis VII ?', a: '« J\'ai cru épouser un roi, j\'ai épousé un moine. » Rapportée par des chroniqueurs, sans preuve qu\'elle l\'ait prononcée.' },
         opts: [
-          { t: 'Vous êtes dure avec lui.', tr: 3, go: 'end', r: 'Je suis juste. Louis est un homme bon. C\'est bien le problème : un royaume ne se gouverne pas avec de la bonté et des prières. Va, voyageur. Si tu veux en savoir plus, il faudra mériter un vrai entretien.', j: 'Je l\'ai trouvée dure avec Louis. « Juste », a-t-elle répondu. Il est bon, et c\'est bien le problème.' },
-          { t: 'Vous allez vous remarier ?', tr: 5, go: 'end', r: 'Quelle impertinence. Tu me plais. Reviens me voir quand nous aurons le temps de parler sérieusement, sans tous ces évêques derrière les portes.', j: 'J\'ai osé lui demander si elle se remarierait. Elle m\'a traité d\'impertinent, puis m\'a dit que je lui plaisais.' }
+          { t: 'Vous êtes dure avec lui.', tr: 3, go: 'end', r: 'Je suis juste. Louis est un homme bon. C\'est bien le problème : un royaume ne se gouverne pas avec de la bonté et des prières. Va, {voyageur|voyageuse}. Si tu veux en savoir plus, il faudra mériter un vrai entretien.', j: 'Je l\'ai trouvée dure avec Louis. « Juste », a-t-elle répondu. Il est bon, et c\'est bien le problème.' },
+          { t: 'Vous allez vous remarier ?', tr: 5, go: 'end', r: 'Quelle impertinence. Tu me plais. Reviens me voir quand nous aurons le temps de parler sérieusement, sans tous ces évêques derrière les portes.', j: 'J\'ai osé lui demander si elle se remarierait. Elle m\'a {traité d\'impertinent|traitée d\'impertinente}, puis m\'a dit que je lui plaisais.' }
         ] },
 
-      b1: { mood: 'calme', say: 'Tu es revenu. Assieds-toi, il fait moins froid près du feu. Demande-moi ce que tu veux, mais demande-le bien.',
+      b1: { mood: 'calme', say: '{Tu es revenu|Tu es revenue}. Assieds-toi, il fait moins froid près du feu. Demande-moi ce que tu veux, mais demande-le bien.',
         opts: [
           { t: 'Qui êtes-vous, sans couronne ?', tr: 6, go: 'b2', j: 'Au coin du feu, je lui ai demandé qui elle était sans couronne.' },
           { t: 'Parlez-moi de l\'Aquitaine.', tr: 4, go: 'b2', j: 'Je l\'ai fait parler de l\'Aquitaine, et sa voix a changé.' }
@@ -4784,7 +4787,7 @@ const SCENES = {
         ] },
       b3: { mood: 'tendu', say: 'On m\'a reproché d\'être trop libre, trop vive, trop présente au conseil. Bernard de Clairvaux me regardait comme on regarde un incendie. Les hommes d\'Église n\'aiment pas les femmes qui parlent politique.',
         opts: [
-          { t: 'Vous étiez en avance sur votre temps.', tr: -2, go: 'b4', r: 'En avance ? Non, voyageur. J\'étais exactement de mon temps. Une héritière, c\'est un royaume qui marche. Je l\'ai simplement compris avant eux.', j: 'Je l\'ai dite en avance sur son temps. Elle a refusé le compliment : elle était de son temps, elle l\'avait juste compris avant les autres.' },
+          { t: 'Vous étiez en avance sur votre temps.', tr: -2, go: 'b4', r: 'En avance ? Non, {voyageur|voyageuse}. J\'étais exactement de mon temps. Une héritière, c\'est un royaume qui marche. Je l\'ai simplement compris avant eux.', j: 'Je l\'ai dite en avance sur son temps. Elle a refusé le compliment : elle était de son temps, elle l\'avait juste compris avant les autres.' },
           { t: 'Qu\'est-ce que vous vouliez vraiment ?', tr: 7, go: 'b4', j: 'Je lui ai demandé ce qu\'elle voulait vraiment. Elle a mis longtemps à répondre.' }
         ] },
       b4: { mood: 'chaud', say: 'Je voulais compter. Pas être une dot qu\'on range dans un coffre. Aujourd\'hui, pour la première fois depuis mes quinze ans, je choisis seule. C\'est étrange. C\'est grisant.',
@@ -4805,7 +4808,7 @@ const SCENES = {
       c3: { mood: 'tendu', say: 'Et puis il y a Antioche. Tu as entendu les rumeurs ? Mon oncle Raymond, les longues conversations en langue d\'oc, la jalousie de Louis… On a dit des choses ignobles.',
         fact: { k: 'legende', t: 'La liaison d\'Aliénor avec son oncle Raymond de Poitiers à Antioche, en 1148, est une rumeur. Aucune preuve ne l\'atteste.', q: 'Que dit la rumeur d\'Antioche, en 1148, et est-elle prouvée ?', a: 'Qu\'Aliénor aurait eu une liaison avec son oncle Raymond de Poitiers, prince d\'Antioche. C\'est une rumeur, sans preuve.' },
         opts: [
-          { t: 'Était-ce vrai ?', tr: -5, go: 'c4', r: 'Tu oses ? Hm. Raymond était le seul homme de cette croisade qui parlait stratégie avec moi. Voilà tout mon crime.', j: 'J\'ai osé demander si les rumeurs d\'Antioche étaient vraies. Son regard m\'a glacé. Raymond, dit-elle, était le seul à lui parler stratégie.' },
+          { t: 'Était-ce vrai ?', tr: -5, go: 'c4', r: 'Tu oses ? Hm. Raymond était le seul homme de cette croisade qui parlait stratégie avec moi. Voilà tout mon crime.', j: 'J\'ai osé demander si les rumeurs d\'Antioche étaient vraies. Son regard m\'a {glacé|glacée}. Raymond, dit-elle, était le seul à lui parler stratégie.' },
           { t: 'Que s\'est-il passé, selon vous ?', tr: 6, go: 'c4', j: 'Elle m\'a raconté Antioche à sa manière : un oncle qui la traitait en égale, un mari jaloux qui l\'a emmenée de force.' }
         ] },
       c4: { mood: 'chaud', say: 'Louis m\'a fait enlever d\'Antioche en pleine nuit. Ce soir-là, j\'ai compris que ce mariage était fini. Il a fallu quatre ans pour que les évêques le comprennent aussi.',
@@ -4827,11 +4830,11 @@ const SCENES = {
         fact: { k: 'fait', t: 'Le 18 mai 1152, deux mois après l\'annulation, Aliénor épouse Henri Plantagenêt à Poitiers.', q: 'Qui Aliénor épouse-t-elle le 18 mai 1152, deux mois après Beaugency ?', a: 'Henri Plantagenêt, duc de Normandie et comte d\'Anjou, futur Henri II d\'Angleterre. Mariage à Poitiers.' },
         opts: [
           { t: 'Le roi Louis va devenir fou de rage.', tr: 6, go: 'd4', j: 'Elle va épouser Henri, onze ans de moins qu\'elle, peut-être bientôt roi d\'Angleterre. J\'ai prédit la rage du roi Louis.' },
-          { t: 'C\'est un mariage d\'amour ?', tr: 4, go: 'd4', r: 'D\'amour, de terres et de vengeance. Les trois ensemble, voyageur, c\'est le meilleur mariage qui soit.', j: 'Mariage d\'amour ? « D\'amour, de terres et de vengeance », a-t-elle tranché.' }
+          { t: 'C\'est un mariage d\'amour ?', tr: 4, go: 'd4', r: 'D\'amour, de terres et de vengeance. Les trois ensemble, {voyageur|voyageuse}, c\'est le meilleur mariage qui soit.', j: 'Mariage d\'amour ? « D\'amour, de terres et de vengeance », a-t-elle tranché.' }
         ] },
       d4: { mood: 'chaud', say: 'Quand Louis apprendra la nouvelle, l\'Aquitaine, l\'Anjou et la Normandie seront dans les mêmes mains. Plus de terres que le roi de France lui-même. Il a voulu se débarrasser d\'une femme. Il va hériter d\'un rival.',
         opts: [
-          { t: 'Vous venez de lancer trois siècles de guerre.', tr: 8, go: 'end', r: 'Trois siècles ? Tu exagères sûrement, voyageur. Mais l\'idée me plaît. Va, maintenant. Et garde tes secrets aussi bien que tu as gardé les miens.', j: 'Je lui ai dit qu\'elle lançait trois siècles de guerre. L\'idée lui a plu. Je n\'ai pas eu le cœur de lui dire que la guerre de Cent Ans lui donnerait presque raison.' }
+          { t: 'Vous venez de lancer trois siècles de guerre.', tr: 8, go: 'end', r: 'Trois siècles ? Tu exagères sûrement, {voyageur|voyageuse}. Mais l\'idée me plaît. Va, maintenant. Et garde tes secrets aussi bien que tu as gardé les miens.', j: 'Je lui ai dit qu\'elle lançait trois siècles de guerre. L\'idée lui a plu. Je n\'ai pas eu le cœur de lui dire que la guerre de Cent Ans lui donnerait presque raison.' }
         ] }
     }
   },
@@ -4843,10 +4846,10 @@ const SCENES = {
     seal: ['Il t\'avoue qu\'il a fait promettre à Remi une chose : si ses guerriers refusent de le suivre, il ne se fera pas baptiser.', 'Il te confie que les évêques de Gaule lui ont fait savoir qu\'ils le soutiendraient contre les rois goths, s\'il devenait catholique.', 'Il te glisse, en baissant la voix : « Les autres rois barbares sont ariens. Si je prends le Dieu des évêques, toute la Gaule romaine sera derrière moi. C\'est ça, ma vraie conversion. »'],
     start: ['a1', 'b1', 'c1', 'd1'],
     nodes: {
-      a1: { mood: 'froid', say: 'Qui t\'a laissé entrer ? Les gardes dorment, ou tu es un sorcier ? Parle vite, étranger. Demain je deviens chrétien, et ce soir je n\'ai pas envie de sermons.',
+      a1: { mood: 'froid', say: 'Qui t\'a laissé entrer ? Les gardes dorment, ou tu es {un sorcier|une sorcière} ? Parle vite, {étranger|étrangère}. Demain je deviens chrétien, et ce soir je n\'ai pas envie de sermons.',
         opts: [
           { t: 'Je ne viens pas vous sermonner. Je viens comprendre.', tr: 8, go: 'a2', j: 'Je l\'ai trouvé seul, une hache entre les mains, la veille de son baptême. Je lui ai dit que je venais comprendre, pas sermonner. Il a posé la hache.' },
-          { t: 'Vous avez peur, roi des Francs ?', tr: -4, go: 'a2', r: 'Peur ? J\'ai pris Soissons à quinze mille Romains, étranger. Je n\'ai pas peur. Je réfléchis. Ce n\'est pas la même chose.', j: 'Je lui ai demandé s\'il avait peur. Il m\'a rappelé Soissons, sèchement. Il ne craint rien, dit-il, il réfléchit.' },
+          { t: 'Vous avez peur, roi des Francs ?', tr: -4, go: 'a2', r: 'Peur ? J\'ai pris Soissons à quinze mille Romains, {étranger|étrangère}. Je n\'ai pas peur. Je réfléchis. Ce n\'est pas la même chose.', j: 'Je lui ai demandé s\'il avait peur. Il m\'a rappelé Soissons, sèchement. Il ne craint rien, dit-il, il réfléchit.' },
           { t: 'Pourquoi vous faire baptiser ?', tr: 2, go: 'a2', j: 'J\'ai posé la question évidente : pourquoi un roi païen se fait-il baptiser ?' }
         ] },
       a2: { mood: 'tendu', say: 'L\'an dernier, contre les Alamans, à Tolbiac, mes hommes reculaient. J\'ai crié vers le ciel : Dieu de Clotilde, donne-moi la victoire et je croirai en toi. Les Alamans ont fui. Un roi tient sa parole.',
@@ -4855,14 +4858,14 @@ const SCENES = {
           { t: 'Et vous croyez vraiment à ce miracle ?', tr: 5, go: 'a3', j: 'Il m\'a raconté le vœu de Tolbiac : le Dieu de Clotilde contre une victoire. J\'ai osé lui demander s\'il y croyait vraiment.' },
           { t: 'Clotilde doit être heureuse.', tr: 4, go: 'a3', r: 'Heureuse ? Elle me le demande depuis notre mariage. Elle a fait baptiser nos fils sans me demander mon avis. Le premier est mort dans ses langes blancs. Je lui en ai voulu, longtemps.', j: 'Clotilde réclame ce baptême depuis leur mariage. Leur premier fils, baptisé, est mort tout petit. Il lui en a voulu longtemps, m\'a-t-il dit.' }
         ] },
-      a3: { mood: 'calme', say: 'Je crois en ce qui gagne, étranger. Wotan ne m\'a jamais donné une bataille. Ce Dieu-là, si. Demain, Remi me dira de courber la tête. Je la courberai. Une seule fois.',
+      a3: { mood: 'calme', say: 'Je crois en ce qui gagne, {étranger|étrangère}. Wotan ne m\'a jamais donné une bataille. Ce Dieu-là, si. Demain, Remi me dira de courber la tête. Je la courberai. Une seule fois.',
         fact: { k: 'fait', t: 'Clovis est baptisé à Reims par l\'évêque Remi, un jour de Noël. L\'année reste discutée : la tradition dit 496, des historiens proposent 498 ou 499, voire 508.', q: 'Où, par qui et quand Clovis est-il baptisé ?', a: 'À Reims, par l\'évêque Remi, un jour de Noël. L\'année est discutée : 496 selon la tradition, peut-être 498 ou 499, voire 508.' },
         opts: [
-          { t: 'Une seule fois ?', tr: 5, go: 'end', r: 'Devant Dieu, oui. Devant les hommes, jamais. Va dormir, étranger. Si tu reviens demain soir, on parlera vraiment, autour d\'un feu et d\'une cruche.', j: 'Il courbera la tête devant Dieu, une seule fois, dit-il. Devant les hommes, jamais.' },
+          { t: 'Une seule fois ?', tr: 5, go: 'end', r: 'Devant Dieu, oui. Devant les hommes, jamais. Va dormir, {étranger|étrangère}. Si tu reviens demain soir, on parlera vraiment, autour d\'un feu et d\'une cruche.', j: 'Il courbera la tête devant Dieu, une seule fois, dit-il. Devant les hommes, jamais.' },
           { t: 'Que diront vos guerriers ?', tr: 6, go: 'end', r: 'Bonne question. Celle que je me pose depuis une semaine. Reviens me voir, toi. Tu poses les questions que mes conseillers n\'osent pas poser.', j: 'Je lui ai demandé ce que diraient ses guerriers. C\'est, m\'a-t-il avoué, la question qui l\'empêche de dormir.' }
         ] },
 
-      b1: { mood: 'chaud', say: 'Le sorcier revient ! Assieds-toi. Ici, on boit de la cervoise, pas du vin de messe. Alors, que veux-tu savoir sur le roi des Francs ?',
+      b1: { mood: 'chaud', say: '{Le sorcier revient|La sorcière revient} ! Assieds-toi. Ici, on boit de la cervoise, pas du vin de messe. Alors, que veux-tu savoir sur le roi des Francs ?',
         opts: [
           { t: 'Comment devient-on roi à quinze ans ?', tr: 6, go: 'b2', j: 'Autour du feu, avec de la cervoise, je lui ai demandé comment on devient roi à quinze ans.' },
           { t: 'Racontez-moi le vase de Soissons.', tr: 4, go: 'b3', j: 'Je lui ai demandé l\'histoire du vase de Soissons. Il a ri, d\'un rire pas très rassurant.' }
@@ -4875,7 +4878,7 @@ const SCENES = {
       b3: { mood: 'tendu', say: 'Le vase. Après Soissons, je voulais rendre un vase précieux à un évêque. Un de mes guerriers l\'a fendu d\'un coup de hache : « Tu n\'auras que ta part, comme les autres. » J\'ai souri. J\'ai attendu un an.',
         fact: { k: 'legende', t: 'L\'anecdote du vase de Soissons est rapportée par Grégoire de Tours. Elle est célèbre, mais impossible à vérifier.', q: 'Que raconte l\'anecdote du vase de Soissons ?', a: 'Un guerrier brise d\'un coup de hache un vase que Clovis voulait rendre à un évêque. Un an plus tard, Clovis le tue en revue. Récit de Grégoire de Tours, invérifiable.' },
         opts: [
-          { t: 'Et un an plus tard ?', tr: 6, go: 'b4', j: 'Un guerrier a brisé le vase réservé à l\'évêque. Clovis a souri, et attendu un an. J\'ai demandé la suite, sans être sûr de vouloir l\'entendre.' },
+          { t: 'Et un an plus tard ?', tr: 6, go: 'b4', j: 'Un guerrier a brisé le vase réservé à l\'évêque. Clovis a souri, et attendu un an. J\'ai demandé la suite, sans être {sûr|sûre} de vouloir l\'entendre.' },
           { t: 'C\'est un peu rancunier, non ?', tr: -2, go: 'b4', r: 'Rancunier ? Non. Patient. Un roi qui laisse un homme lui dire non devant tous n\'est plus roi le lendemain.', j: 'Je l\'ai trouvé rancunier. Il préfère « patient ». Un roi contredit devant tous n\'est plus roi le lendemain.' }
         ] },
       b4: { mood: 'froid', say: 'À la revue des troupes, je suis passé devant lui. J\'ai jeté sa hache par terre : mal entretenue. Il s\'est penché pour la ramasser, et je lui ai fendu le crâne. « Souviens-toi du vase de Soissons. » Plus personne ne m\'a contredit.',
@@ -4899,7 +4902,7 @@ const SCENES = {
           { t: 'Les deux, c\'est le meilleur mariage.', tr: 6, go: 'c4', j: 'Il ne sait pas si Clotilde prie pour lui par amour ou par stratégie. Je lui ai dit que les deux ensemble faisaient le meilleur mariage.' },
           { t: 'Vous l\'aimez ?', tr: 7, go: 'c4', j: 'Je lui ai demandé s\'il aimait Clotilde. Il a longtemps regardé le feu.' }
         ] },
-      c4: { mood: 'chaud', say: 'Je l\'aime assez pour lui donner la seule chose qu\'elle m\'ait jamais demandée. Tu vois, sorcier : demain, ce n\'est pas seulement le roi qui se fait baptiser. C\'est un mari qui tient sa promesse.',
+      c4: { mood: 'chaud', say: 'Je l\'aime assez pour lui donner la seule chose qu\'elle m\'ait jamais demandée. Tu vois, {sorcier|sorcière} : demain, ce n\'est pas seulement le roi qui se fait baptiser. C\'est un mari qui tient sa promesse.',
         opts: [
           { t: 'Merci de m\'avoir dit cela.', tr: 6, go: 'end', r: 'Ne le répète pas. Et reviens. Il me reste à te dire pourquoi les évêques m\'attendent avec autant d\'impatience.', j: 'Demain, ce n\'est pas seulement un roi qui se fait baptiser, m\'a-t-il dit. C\'est un mari qui tient sa promesse.' }
         ] },
@@ -4911,7 +4914,7 @@ const SCENES = {
       d2: { mood: 'chaud', say: 'Exactement. Les Gallo-Romains sont catholiques. Leurs évêques tiennent les villes, les routes, les greniers. Le jour où je partage leur foi, ils ne verront plus un barbare. Ils verront un protecteur.',
         fact: { k: 'fait', t: 'En choisissant le catholicisme et non l\'arianisme des autres rois germaniques, Clovis gagne l\'appui des évêques et de la population gallo-romaine.', q: 'Pourquoi le choix du catholicisme plutôt que de l\'arianisme est-il un atout politique pour Clovis ?', a: 'Les Gallo-Romains et leurs évêques sont catholiques, alors que les autres rois germaniques sont ariens. Clovis gagne ainsi leur soutien.' },
         opts: [
-          { t: 'C\'est donc un calcul politique.', tr: 5, go: 'd3', r: 'Calcul, foi : chez un roi, c\'est la même chose, sorcier. Dieu m\'a donné Tolbiac. Les évêques me donneront la Gaule.', j: 'Calcul ou foi ? Chez un roi, c\'est la même chose, m\'a-t-il répondu. Dieu lui a donné Tolbiac, les évêques lui donneront la Gaule.' },
+          { t: 'C\'est donc un calcul politique.', tr: 5, go: 'd3', r: 'Calcul, foi : chez un roi, c\'est la même chose, {sorcier|sorcière}. Dieu m\'a donné Tolbiac. Les évêques me donneront la Gaule.', j: 'Calcul ou foi ? Chez un roi, c\'est la même chose, m\'a-t-il répondu. Dieu lui a donné Tolbiac, les évêques lui donneront la Gaule.' },
           { t: 'Et les Wisigoths d\'Alaric ?', tr: 7, go: 'd3', j: 'J\'ai prononcé le nom d\'Alaric, roi des Wisigoths. Ses yeux se sont allumés.' }
         ] },
       d3: { mood: 'tendu', say: 'Alaric tient tout le sud, jusqu\'aux Pyrénées. Un hérétique qui règne sur des catholiques. Un jour, j\'irai le chercher. Et les évêques d\'Aquitaine m\'ouvriront les portes.',
@@ -4919,9 +4922,9 @@ const SCENES = {
         opts: [
           { t: 'Et ensuite, une capitale ?', tr: 6, go: 'd4', j: 'Un jour, il ira chercher Alaric dans le sud, et les évêques lui ouvriront les portes. Je lui ai demandé où il installerait sa capitale.' }
         ] },
-      d4: { mood: 'chaud', say: 'Paris. Une île sur la Seine, facile à défendre, au milieu de tout. Tu ris ? Retiens bien ce nom, sorcier. Dans mille ans, on parlera encore de ce que j\'ai commencé cette nuit.',
+      d4: { mood: 'chaud', say: 'Paris. Une île sur la Seine, facile à défendre, au milieu de tout. Tu ris ? Retiens bien ce nom, {sorcier|sorcière}. Dans mille ans, on parlera encore de ce que j\'ai commencé cette nuit.',
         opts: [
-          { t: 'Plus de mille cinq cents ans, même.', tr: 8, go: 'end', r: 'Mille cinq cents ans ? Tu es bien un sorcier. Va, maintenant. Demain, je courbe la tête. Une seule fois.', j: 'Il choisira Paris, une île sur la Seine. Je lui ai dit qu\'on parlerait de lui plus de mille cinq cents ans plus tard. Il m\'a traité de sorcier, avec un plaisir évident.' }
+          { t: 'Plus de mille cinq cents ans, même.', tr: 8, go: 'end', r: 'Mille cinq cents ans ? Tu es bien {un sorcier|une sorcière}. Va, maintenant. Demain, je courbe la tête. Une seule fois.', j: 'Il choisira Paris, une île sur la Seine. Je lui ai dit qu\'on parlerait de lui plus de mille cinq cents ans plus tard. Il m\'a {traité de sorcier|traitée de sorcière}, avec un plaisir évident.' }
         ] }
     }
   }
@@ -5067,7 +5070,7 @@ render = function (keep) { _render(keep); if (ui.tab === 'quest' && ui.step === 
 function viewJournal() {
   const V = vyState(), J = ui.jr || (ui.jr = { i: 0, edit: false });
   const list = V.journal.filter(e => e.parts.length).slice().sort((a, b) => a.visit - b.visit);
-  let h = '<button class="back" data-do="' + (ui.vy && ui.vy.id ? 'vy-home' : 'hub') + '">‹ Retour</button><h1 class="h1">Journal de bord du voyageur</h1>' +
+  let h = '<button class="back" data-do="' + (ui.vy && ui.vy.id ? 'vy-home' : 'hub') + '">‹ Retour</button><h1 class="h1">' + gx('Journal de bord {du voyageur|de la voyageuse}') + '</h1>' +
     '<p class="eyebrow">Classé par date de visite, avec tes allers et retours dans le temps</p>';
   if (!list.length) return h + '<p class="empty">Ton journal est encore vierge. Pars en voyage et il s\'écrira tout seul.</p>';
   J.i = clamp(J.i, 0, list.length - 1);
@@ -5147,21 +5150,21 @@ Object.assign(DO, {
 });
 D.addEventListener('click', e => { if (ui.vy && ui.vy.mode === 'scene' && e.target.closest && e.target.closest('.vy-box .tw')) { ui.vy.skip = true; } });
 
-/* LE SALON ÉPISTOLAIRE : missives entre voyageurs, visibles de tous */
-const MS = { list: [], on: false, open: false };
-function initMissives() {
+/* CORRESPONDANCE PRIVÉE : missives d'un voyageur à un autre, lisibles des deux seuls correspondants */
+const MS = { list: [], on: false };
+function initLettres() {
   if (MS.on || !DBX || !MYID) return; MS.on = true;
-  DBX.collection('missives').orderBy('t', 'desc').limit(60).onSnapshot(q => {
-    MS.list = q.docs.map(d => Object.assign({ id: d.id }, d.data())).filter(m => m && typeof m.text === 'string' && m.by).sort((a, b) => (a.t || 0) - (b.t || 0));
-    if (ui.tab === 'arena' && !ui.duel) { const ta = $('#mtext'), keep = ta ? ta.value : ''; render(true); const t2 = $('#mtext'); if (t2 && keep) t2.value = keep; } else markMissives();
+  DBX.collection('lettres').orderBy('t', 'desc').limit(400).onSnapshot(q => {
+    MS.list = q.docs.map(d => Object.assign({ id: d.id }, d.data())).filter(m => m && typeof m.text === 'string' && m.by && m.to && (m.by === MYID || m.to === MYID)).sort((a, b) => (a.t || 0) - (b.t || 0));
+    if (ui.tab === 'arena' && ui.corr) { const ta = $('#mtext'), keep = ta ? ta.value : ''; render(true); const t2 = $('#mtext'); if (t2 && keep) t2.value = keep; scrollThread(); }
+    else { if (ui.tab === 'arena' && !ui.duel) render(true); markLettres(); }
   }, () => {});
 }
-function lastSeenM() { try { return +localStorage.getItem('chronoscope.missivesVues') || 0; } catch (e) { return 0; } }
-function unreadM() { const s = lastSeenM(); return MS.list.filter(m => m.by !== MYID && (m.t || 0) > s).length; }
-function markMissives() {
-  const n = unreadM(), b = $('#tabs button[data-t="arena"]');
-  if (b && n && ui.tab !== 'arena') b.classList.add('ping');
-}
+function seenMap() { try { return JSON.parse(localStorage.getItem('chronoscope.lettresLues') || '{}'); } catch (e) { return {}; } }
+function setSeen(uid, t) { const m = seenMap(); if ((m[uid] || 0) >= t) return; m[uid] = t; try { localStorage.setItem('chronoscope.lettresLues', JSON.stringify(m)); } catch (e) { /* ignoré */ } }
+function unreadFrom(uid) { const s = seenMap()[uid] || 0; return MS.list.filter(m => m.by === uid && m.to === MYID && (m.t || 0) > s).length; }
+function unreadAll() { const s = seenMap(); return MS.list.filter(m => m.to === MYID && (m.t || 0) > (s[m.by] || 0)).length; }
+function markLettres() { const b = $('#tabs button[data-t="arena"]'); if (b && unreadAll() && !(ui.tab === 'arena' && ui.corr)) b.classList.add('ping'); }
 function quand(t) {
   const d = Date.now() - (t || 0), m = Math.round(d / 60000);
   if (m < 1) return 'à l\'instant';
@@ -5169,39 +5172,81 @@ function quand(t) {
   const h = Math.round(m / 60); if (h < 24) return 'il y a ' + h + ' heure' + (h > 1 ? 's' : '');
   return 'le ' + new Date(t).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
 }
-function salonSection() {
+function scrollThread() { const el = $('#mthread'); if (el) setTimeout(() => { window.scrollTo(0, D.body.scrollHeight); }, 30); }
+function corrCard() {
   if (!DBX || !MYID || !S.prof.name) return '';
-  initMissives();
-  const seen = lastSeenM(), n = unreadM();
-  const all = MS.list, shown = MS.open ? all : all.slice(-12);
-  let h = '<div class="ar-head"><h3>Le salon épistolaire</h3>' + (n ? '<span class="m-new">' + n + ' missive' + (n > 1 ? 's' : '') + ' non lue' + (n > 1 ? 's' : '') + '</span>' : '') + '</div>' +
-    '<p class="hint">Ici, les voyageurs s\'écrivent. Toute missive est lue par l\'ensemble de la cour : point de secrets d\'alcôve.</p>';
-  if (all.length > shown.length) h += '<button class="lnk" data-do="m-all">Déplier les ' + (all.length - shown.length) + ' missives plus anciennes</button>';
-  h += shown.length ? '<ol class="missives">' + shown.map(m => {
-    const me = m.by === MYID, nouveau = !me && (m.t || 0) > seen;
-    return '<li class="missive' + (me ? ' mine' : '') + (nouveau ? ' fresh' : '') + '"><div class="m-head">' + avatar(pav(m.by), 28) + '<span><b>' + esc(me ? 'Vous, ' + pname(m.by) : pname(m.by)) + '</b><small>Missive scellée ' + quand(m.t) + '</small></span></div>' +
-      '<p>' + esc(String(m.text).slice(0, 500)) + '</p></li>';
-  }).join('') + '</ol>' : '<p class="empty">Aucune missive n\'a encore été portée au salon. Prenez la plume la première !</p>';
-  h += '<div class="m-compose"><textarea id="mtext" rows="3" maxlength="500" placeholder="Très chers voyageurs, je vous écris de l\'an de grâce…"></textarea>' +
-    '<div class="nav"><button class="btn" data-do="m-send">Cacheter et expédier</button></div></div>';
-  try { if (ui.tab === 'arena' && all.length) localStorage.setItem('chronoscope.missivesVues', String(Math.max(seen, all[all.length - 1].t || 0))); } catch (e) { /* ignoré */ }
+  initLettres();
+  const n = unreadAll();
+  return '<button class="corr-card" data-do="corr-open">' + sym('s-quill') + '<span><b>Ma correspondance</b><small>' + (n ? n + ' missive' + (n > 1 ? 's' : '') + ' non décachetée' + (n > 1 ? 's' : '') : 'Écrire en privé au voyageur de ton choix') + '</small></span>' + (n ? '<i class="corr-n">' + n + '</i>' : '') + '</button>';
+}
+function viewCorr() {
+  initLettres();
+  const C = ui.corr;
+  if (C.with) return viewThread(C.with);
+  const ids = Object.keys(AR.players).filter(id => id !== MYID && AR.players[id] && AR.players[id].name);
+  const last = id => { const l = MS.list.filter(m => (m.by === id && m.to === MYID) || (m.by === MYID && m.to === id)); return l[l.length - 1]; };
+  ids.sort((a, b) => ((last(b) || {}).t || 0) - ((last(a) || {}).t || 0) || pname(a).localeCompare(pname(b)));
+  let h = '<button class="back" data-do="corr-close">‹ L\'arène</button><h1 class="h1">Ma correspondance</h1>' +
+    '<p class="hint">Choisis à qui écrire. Une missive n\'est lue que par toi et ton correspondant.</p>';
+  if (!ids.length) return h + '<p class="empty">Aucun autre voyageur n\'est encore inscrit. Invite tes amis à te rejoindre !</p>';
+  h += '<ul class="corr-list">' + ids.map(id => {
+    const l = last(id), n = unreadFrom(id);
+    return '<li><button class="corr-row' + (n ? ' unread' : '') + '" data-do="corr-with" data-id="' + esc(id) + '">' + avatar(pav(id), 40) + '<span class="cr-tx"><b>' + esc(pname(id)) + '</b><small>' +
+      (l ? (l.by === MYID ? 'Vous : ' : '') + esc(String(l.text).slice(0, 60)) + (l.text.length > 60 ? '…' : '') : 'Aucune missive échangée') + '</small></span>' + (n ? '<i class="corr-n">' + n + '</i>' : (l ? '<small class="cr-t">' + quand(l.t) + '</small>' : '')) + '</button></li>';
+  }).join('') + '</ul>';
+  return h;
+}
+function viewThread(id) {
+  const thread = MS.list.filter(m => (m.by === id && m.to === MYID) || (m.by === MYID && m.to === id));
+  if (thread.length) setSeen(id, thread[thread.length - 1].t || 0);
+  const b = $('#tabs button[data-t="arena"]'); if (b && !unreadAll()) b.classList.remove('ping');
+  let h = '<button class="back" data-do="corr-back">‹ Ma correspondance</button><div class="th-head">' + avatar(pav(id), 48) + '<div><small>Correspondance avec</small><b>' + esc(pname(id)) + '</b></div></div>';
+  h += thread.length ? '<ol class="missives" id="mthread">' + thread.map(m => {
+    const me = m.by === MYID;
+    return '<li class="missive' + (me ? ' mine' : '') + '"><div class="m-head"><span><b>' + (me ? 'Vous' : esc(pname(m.by))) + '</b><small>Missive scellée ' + quand(m.t) + '</small></span></div><p>' + esc(String(m.text).slice(0, 1000)) + '</p></li>';
+  }).join('') + '</ol>' : '<p class="empty" id="mthread">Le parchemin est encore vierge. Prenez la plume !</p>';
+  h += '<div class="m-compose"><textarea id="mtext" rows="3" maxlength="1000" placeholder="' + esc('{Très cher|Très chère} ami, je vous écris de l\'an de grâce…') + '"></textarea>' +
+    '<div class="nav"><button class="btn" data-do="m-send" data-id="' + esc(id) + '">Cacheter et expédier</button></div></div>';
   return h;
 }
 function pushNudge() {
   const P2 = window.CHRONO_PUSH;
   if (!P2 || typeof pushButton !== 'function' || (typeof pushOn !== 'undefined' && pushOn)) return '';
-  return '<div class="push-nudge"><span>Pour qu\'un coursier te prévienne quand on te lance un défi, active les notifications.</span>' + pushButton() + '</div>';
+  return '<div class="push-nudge"><span>Pour qu\'un coursier te prévienne d\'un défi ou d\'une missive, active les notifications.</span>' + pushButton() + '</div>';
 }
 Object.assign(DO, {
-  'm-all': () => { MS.open = true; render(true); },
+  'corr-open': () => { ui.corr = { with: '' }; render(); },
+  'corr-close': () => { ui.corr = null; render(); },
+  'corr-back': () => { ui.corr = { with: '' }; render(); },
+  'corr-with': el => { ui.corr = { with: el.getAttribute('data-id') }; render(); scrollThread(); },
   'm-send': async el => {
-    const ta = $('#mtext'), text = (ta.value || '').trim().slice(0, 500);
+    const ta = $('#mtext'), text = (ta.value || '').trim().slice(0, 1000), to = el.getAttribute('data-id');
     if (text.length < 2) { toast('Votre missive est bien courte', 'rank'); return; }
     el.disabled = true; el.textContent = 'Le coursier part…';
-    try { await DBX.collection('missives').add({ by: MYID, text: text, t: Date.now() }); ta.value = ''; toast('Missive cachetée et expédiée', 'xp'); }
+    try { await DBX.collection('lettres').add({ by: MYID, to: to, text: text, t: Date.now() }); ta.value = ''; toast('Missive cachetée et expédiée', 'xp'); el.disabled = false; el.textContent = 'Cacheter et expédier'; }
     catch (e) { toast('Le coursier s\'est perdu en route : réessaie', 'rank'); el.disabled = false; el.textContent = 'Cacheter et expédier'; }
   }
 });
+/* ouvrir une correspondance depuis une notification */
+if (/^#lettres/.test(location.hash)) { ui.tab = 'arena'; ui.corr = { with: decodeURIComponent(location.hash.split('-').slice(1).join('-')) || '' }; }
+
+/* ---------- genre du voyageur ---------- */
+function genderSheet(first) {
+  return '<h2>' + (first ? 'Avant le grand saut' : 'Mon genre') + '</h2><p class="hint">' + (first ? 'Le Chronoscope doit savoir comment s\'adresser à toi : rangs, titres et dialogues s\'accorderont.' : 'Rangs, titres et dialogues s\'accordent selon ton choix.') + '</p>' +
+    '<div class="gpick"><button class="btn' + (S.prof.g === 'f' ? '' : ' ghost') + '" data-do="g-set" data-v="f">Je suis une voyageuse</button><button class="btn' + (S.prof.g === 'm' ? '' : ' ghost') + '" data-do="g-set" data-v="m">Je suis un voyageur</button></div>';
+}
+function genderRow() {
+  return '<h3>Genre</h3><div class="seg"><button class="' + (S.prof.g !== 'm' && S.prof.g ? 'on' : '') + '" data-do="g-set" data-v="f" data-keep="1">Voyageuse</button><button class="' + (S.prof.g === 'm' ? 'on' : '') + '" data-do="g-set" data-v="m" data-keep="1">Voyageur</button></div>';
+}
+Object.assign(DO, {
+  'g-set': el => {
+    S.prof.g = el.getAttribute('data-v') === 'm' ? 'm' : 'f'; save();
+    if (typeof pushPlayer === 'function') { lastPlayer = ''; pushPlayer(); }
+    if (el.getAttribute('data-keep')) openSheet(profileSheet()); else closeSheet();
+    render(true); toast(G('Bienvenue, voyageur', 'Bienvenue, voyageuse'), 'xp');
+  }
+});
+setTimeout(() => { if (!S.prof.g && $('#sheet') && $('#sheet').hidden) openSheet(genderSheet(true)); }, 900);
 
 /* ---------- démarrage ---------- */
 D.body.insertAdjacentHTML('afterbegin', SPRITE);

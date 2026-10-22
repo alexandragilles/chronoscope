@@ -528,6 +528,17 @@ body[data-era="renaissance"] #head, body[data-era="classique"] #head { border-bo
 .m-compose textarea { width: 100%; box-sizing: border-box; font: inherit; font-family: var(--fb); background: #F6ECD2; color: #2B2116; border: 1px dashed #b8a27a; border-radius: 8px; padding: 10px; }
 .push-nudge { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; padding: 10px 12px; margin: 8px 0 12px; border-radius: 10px; border: 1px solid var(--gold); background: var(--card); font-size: 13px; }
 .push-nudge span { min-width: 0; flex: 1 1 180px; }
+.corr-card { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 12px 14px; margin: 4px 0 14px; border-radius: 12px; border: 1px solid var(--gold); background: #F6ECD2 var(--grain); color: #2B2116; font: inherit; cursor: pointer; }
+.corr-card .ic { width: 28px; height: 28px; color: #7A4A1E; flex: none; }
+.corr-card span { display: flex; flex-direction: column; flex: 1; min-width: 0; } .corr-card small { color: #6E5B40; }
+.corr-n { font-style: normal; background: var(--red); color: #fff; border-radius: 99px; min-width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; padding: 0 6px; }
+.corr-list { list-style: none; padding: 0; margin: 8px 0; display: flex; flex-direction: column; gap: 8px; }
+.corr-row { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font: inherit; cursor: pointer; }
+.corr-row.unread { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(199,154,43,.3); }
+.cr-tx { display: flex; flex-direction: column; flex: 1; min-width: 0; } .cr-tx small { color: var(--ink2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cr-t { color: var(--ink2); font-size: 11px; flex: none; }
+.th-head { display: flex; align-items: center; gap: 12px; margin: 6px 0 12px; } .th-head div { display: flex; flex-direction: column; } .th-head b { font-family: var(--fh); font-size: 18px; } .th-head small { color: var(--ink2); }
+.gpick { display: flex; flex-direction: column; gap: 10px; margin: 14px 0 6px; }
 </style>
 <header id="head"></header>
 <main id="view"></main>
@@ -536,7 +547,7 @@ body[data-era="renaissance"] #head, body[data-era="classique"] #head { border-bo
 <div id="toasts" aria-live="polite"></div>
 <script src="supabase.js"></script>
 <script src="config.js"></script>
-<script src="shim.js?v=mvjwbky1"></script>
-<script src="app.js?v=mvjwbky1"></script>
+<script src="shim.js?v=mvjwswy6"></script>
+<script src="app.js?v=mvjwswy6"></script>
 </body>
 </html>
