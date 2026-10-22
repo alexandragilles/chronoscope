@@ -116,4 +116,17 @@
   };
 
   if ('serviceWorker' in navigator) window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+  /* mise à jour automatique : si une nouvelle version est publiée, on recharge */
+  function checkUpdate() {
+    const cur = (document.querySelector('script[src^="app.js"]') || {}).getAttribute && document.querySelector('script[src^="app.js"]').getAttribute('src');
+    fetch('index.html?u=' + Date.now(), { cache: 'no-store' }).then(r => r.text()).then(t => {
+      const m = t.match(/src="(app\.js\?v=[^"]+)"/);
+      if (m && cur && m[1] !== cur) {
+        const reg = navigator.serviceWorker && navigator.serviceWorker.getRegistration ? navigator.serviceWorker.getRegistration() : Promise.resolve(null);
+        reg.then(g => g && g.update()).catch(() => {}).then(() => { try { if (sessionStorage.getItem('chrono.upd') === m[1]) return; sessionStorage.setItem('chrono.upd', m[1]); } catch (e) { return; } location.reload(); });
+      }
+    }).catch(() => {});
+  }
+  window.addEventListener('load', () => setTimeout(checkUpdate, 1500));
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkUpdate(); });
 })();
