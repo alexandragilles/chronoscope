@@ -4416,6 +4416,7 @@ function viewArena() {
   if (!S.prof.name) return h + '<p class="hint">Choisis un pseudo et un blason pour apparaître au classement et lancer des défis.</p>';
   // défis
   h += '<div class="ar-head"><h3>Défis</h3><button class="btn sm" data-do="duel-new">Lancer un défi</button></div>';
+  if (typeof pushNudge === 'function') h += pushNudge();
   if (!AR.duels.length) h += '<p class="empty">Aucun défi pour l\'instant. Lance le premier !</p>';
   else {
   const pend = pending();
@@ -4432,6 +4433,7 @@ function viewArena() {
   const list = Object.keys(AR.players).map(id => Object.assign({ id: id }, AR.players[id])).filter(p => p.name).sort((a, b) => (b.xp || 0) - (a.xp || 0));
   h += '<h3>Classement général</h3>' + (list.length ? '<ol class="ladder">' + list.map((p, i) => '<li class="' + (p.id === MYID ? 'you' : '') + '"><span class="pos">' + (i + 1) + '</span>' + avatar(p.av, 36) +
     '<span class="nm"><b>' + esc(String(p.name).slice(0, 24)) + '</b><small>' + esc(String(p.rank || '')) + ' · ' + (p.done | 0) + '/15 actes</small></span><b class="xp">' + (p.xp | 0) + ' XP</b></li>').join('') + '</ol>' : '<p class="empty">Personne encore. Sois la première !</p>');
+  if (typeof salonSection === 'function') h += salonSection();
   if (typeof ideasSection === 'function') h += ideasSection();
   return h;
 }
@@ -5144,6 +5146,62 @@ Object.assign(DO, {
   }
 });
 D.addEventListener('click', e => { if (ui.vy && ui.vy.mode === 'scene' && e.target.closest && e.target.closest('.vy-box .tw')) { ui.vy.skip = true; } });
+
+/* LE SALON ÉPISTOLAIRE : missives entre voyageurs, visibles de tous */
+const MS = { list: [], on: false, open: false };
+function initMissives() {
+  if (MS.on || !DBX || !MYID) return; MS.on = true;
+  DBX.collection('missives').orderBy('t', 'desc').limit(60).onSnapshot(q => {
+    MS.list = q.docs.map(d => Object.assign({ id: d.id }, d.data())).filter(m => m && typeof m.text === 'string' && m.by).sort((a, b) => (a.t || 0) - (b.t || 0));
+    if (ui.tab === 'arena' && !ui.duel) { const ta = $('#mtext'), keep = ta ? ta.value : ''; render(true); const t2 = $('#mtext'); if (t2 && keep) t2.value = keep; } else markMissives();
+  }, () => {});
+}
+function lastSeenM() { try { return +localStorage.getItem('chronoscope.missivesVues') || 0; } catch (e) { return 0; } }
+function unreadM() { const s = lastSeenM(); return MS.list.filter(m => m.by !== MYID && (m.t || 0) > s).length; }
+function markMissives() {
+  const n = unreadM(), b = $('#tabs button[data-t="arena"]');
+  if (b && n && ui.tab !== 'arena') b.classList.add('ping');
+}
+function quand(t) {
+  const d = Date.now() - (t || 0), m = Math.round(d / 60000);
+  if (m < 1) return 'à l\'instant';
+  if (m < 60) return 'il y a ' + m + ' minute' + (m > 1 ? 's' : '');
+  const h = Math.round(m / 60); if (h < 24) return 'il y a ' + h + ' heure' + (h > 1 ? 's' : '');
+  return 'le ' + new Date(t).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
+}
+function salonSection() {
+  if (!DBX || !MYID || !S.prof.name) return '';
+  initMissives();
+  const seen = lastSeenM(), n = unreadM();
+  const all = MS.list, shown = MS.open ? all : all.slice(-12);
+  let h = '<div class="ar-head"><h3>Le salon épistolaire</h3>' + (n ? '<span class="m-new">' + n + ' missive' + (n > 1 ? 's' : '') + ' non lue' + (n > 1 ? 's' : '') + '</span>' : '') + '</div>' +
+    '<p class="hint">Ici, les voyageurs s\'écrivent. Toute missive est lue par l\'ensemble de la cour : point de secrets d\'alcôve.</p>';
+  if (all.length > shown.length) h += '<button class="lnk" data-do="m-all">Déplier les ' + (all.length - shown.length) + ' missives plus anciennes</button>';
+  h += shown.length ? '<ol class="missives">' + shown.map(m => {
+    const me = m.by === MYID, nouveau = !me && (m.t || 0) > seen;
+    return '<li class="missive' + (me ? ' mine' : '') + (nouveau ? ' fresh' : '') + '"><div class="m-head">' + avatar(pav(m.by), 28) + '<span><b>' + esc(me ? 'Vous, ' + pname(m.by) : pname(m.by)) + '</b><small>Missive scellée ' + quand(m.t) + '</small></span></div>' +
+      '<p>' + esc(String(m.text).slice(0, 500)) + '</p></li>';
+  }).join('') + '</ol>' : '<p class="empty">Aucune missive n\'a encore été portée au salon. Prenez la plume la première !</p>';
+  h += '<div class="m-compose"><textarea id="mtext" rows="3" maxlength="500" placeholder="Très chers voyageurs, je vous écris de l\'an de grâce…"></textarea>' +
+    '<div class="nav"><button class="btn" data-do="m-send">Cacheter et expédier</button></div></div>';
+  try { if (ui.tab === 'arena' && all.length) localStorage.setItem('chronoscope.missivesVues', String(Math.max(seen, all[all.length - 1].t || 0))); } catch (e) { /* ignoré */ }
+  return h;
+}
+function pushNudge() {
+  const P2 = window.CHRONO_PUSH;
+  if (!P2 || typeof pushButton !== 'function' || (typeof pushOn !== 'undefined' && pushOn)) return '';
+  return '<div class="push-nudge"><span>Pour qu\'un coursier te prévienne quand on te lance un défi, active les notifications.</span>' + pushButton() + '</div>';
+}
+Object.assign(DO, {
+  'm-all': () => { MS.open = true; render(true); },
+  'm-send': async el => {
+    const ta = $('#mtext'), text = (ta.value || '').trim().slice(0, 500);
+    if (text.length < 2) { toast('Votre missive est bien courte', 'rank'); return; }
+    el.disabled = true; el.textContent = 'Le coursier part…';
+    try { await DBX.collection('missives').add({ by: MYID, text: text, t: Date.now() }); ta.value = ''; toast('Missive cachetée et expédiée', 'xp'); }
+    catch (e) { toast('Le coursier s\'est perdu en route : réessaie', 'rank'); el.disabled = false; el.textContent = 'Cacheter et expédier'; }
+  }
+});
 
 /* ---------- démarrage ---------- */
 D.body.insertAdjacentHTML('afterbegin', SPRITE);

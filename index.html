@@ -514,6 +514,20 @@ body[data-era="renaissance"] #head, body[data-era="classique"] #head { border-bo
 .actcard .bn::after, .hub-ban .bn::after { content: ''; position: absolute; inset: 0; box-shadow: inset 0 -24px 30px -18px rgba(20,12,4,.45); pointer-events: none; }
 .bn-cap { display: block; margin: -8px 0 12px; font-size: 11px; color: var(--ink2); font-style: italic; }
 .bn { background: linear-gradient(135deg, #3b2c1a, #1d150c); }
+/* salon épistolaire */
+.missives { list-style: none; margin: 8px 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.missive { background: #F6ECD2 var(--grain); color: #2B2116; border: 1px solid #d8c49a; border-radius: 4px 12px 12px 12px; padding: 10px 12px; box-shadow: 0 2px 6px rgba(60,40,10,.12); font-family: var(--fb); }
+.missive.mine { margin-left: 28px; border-radius: 12px 4px 12px 12px; background: #EFE3C2 var(--grain); }
+.missive:not(.mine) { margin-right: 28px; }
+.missive.fresh { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(199,154,43,.35); }
+.m-head { display: flex; gap: 8px; align-items: center; margin-bottom: 4px; }
+.m-head span { display: flex; flex-direction: column; min-width: 0; }
+.m-head small { color: #6E5B40; font-style: italic; font-size: 11.5px; }
+.missive p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.5; }
+.m-new { font-size: 12px; color: var(--red); font-weight: 700; }
+.m-compose textarea { width: 100%; box-sizing: border-box; font: inherit; font-family: var(--fb); background: #F6ECD2; color: #2B2116; border: 1px dashed #b8a27a; border-radius: 8px; padding: 10px; }
+.push-nudge { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; padding: 10px 12px; margin: 8px 0 12px; border-radius: 10px; border: 1px solid var(--gold); background: var(--card); font-size: 13px; }
+.push-nudge span { min-width: 0; flex: 1 1 180px; }
 </style>
 <header id="head"></header>
 <main id="view"></main>
@@ -522,7 +536,7 @@ body[data-era="renaissance"] #head, body[data-era="classique"] #head { border-bo
 <div id="toasts" aria-live="polite"></div>
 <script src="supabase.js"></script>
 <script src="config.js"></script>
-<script src="shim.js?v=mvjuwtmi"></script>
-<script src="app.js?v=mvjuwtmi"></script>
+<script src="shim.js?v=mvjwbky1"></script>
+<script src="app.js?v=mvjwbky1"></script>
 </body>
 </html>
