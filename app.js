@@ -4734,7 +4734,7 @@ const LEVELS_VY = [
 ];
 const SCENES = {
   beaugency: {
-    act: 7, who: 'alienor', year: 1152, date: 'mars 1152', place: 'Beaugency, au bord de la Loire',
+    act: 7, who: 'alienor', year: 1152, date: 'mars 1152', place: 'Beaugency, au bord de la Loire', title: 'Aliénor à Beaugency', lead: 'Remonte le temps jusqu\'au jour où un mariage royal se défait.',
     bg: { src: WM + '2/28/Louis_vii_and_alienor.jpg/960px-Louis_vii_and_alienor.jpg', cap: 'Le mariage de Louis VII et d\'Aliénor, Grandes Chroniques de France, XIVe siècle', lic: 'Domaine public', page: 'https://commons.wikimedia.org/wiki/File:Louis_vii_and_alienor.jpg' },
     face: { src: WM + '2/2b/Fontevraud_Gisants_Alienor.jpg/960px-Fontevraud_Gisants_Alienor.jpg', pos: '12% 24%', size: '420%', cap: 'Gisant d\'Aliénor, abbaye de Fontevraud, vers 1204', lic: 'Domaine public, photo UAltmann', page: 'https://commons.wikimedia.org/wiki/File:Fontevraud_Gisants_Alienor.jpg' },
     intro: 'Le Chronoscope te dépose dans une salle froide du château de Beaugency. Des évêques sortent en file, l\'air satisfait. Le concile vient de déclarer nul le mariage du roi Louis VII et d\'Aliénor d\'Aquitaine, pour cause de parenté trop proche. Près d\'une fenêtre, une femme d\'une trentaine d\'années regarde la Loire. Elle ne pleure pas. Elle compte.',
@@ -4823,6 +4823,96 @@ const SCENES = {
           { t: 'Vous venez de lancer trois siècles de guerre.', tr: 8, go: 'end', r: 'Trois siècles ? Tu exagères sûrement, voyageur. Mais l\'idée me plaît. Va, maintenant. Et garde tes secrets aussi bien que tu as gardé les miens.', j: 'Je lui ai dit qu\'elle lançait trois siècles de guerre. L\'idée lui a plu. Je n\'ai pas eu le cœur de lui dire que la guerre de Cent Ans lui donnerait presque raison.' }
         ] }
     }
+  },
+  reims: {
+    act: 1, who: 'clovis', year: 496, date: 'Noël 496 (date discutée)', place: 'Reims, la nuit avant le baptême', title: 'Clovis à Reims', lead: 'Remonte le temps jusqu\'à la nuit où un roi païen s\'apprête à courber la tête.',
+    bg: { src: WM + '7/7e/Master_of_Saint_Giles%2C_The_Baptism_of_Clovis%2C_c._1500%2C_NGA_41597.jpg/960px-Master_of_Saint_Giles%2C_The_Baptism_of_Clovis%2C_c._1500%2C_NGA_41597.jpg', cap: 'Le Baptême de Clovis, Maître de Saint-Gilles, vers 1500, National Gallery of Art, Washington', lic: 'CC0', page: 'https://commons.wikimedia.org/wiki/File:Master_of_Saint_Giles,_The_Baptism_of_Clovis,_c._1500,_NGA_41597.jpg' },
+    face: { src: 'https://upload.wikimedia.org/wikipedia/commons/5/56/Saint_Remigius_baptizes_Clovis_I_%28Detail%29.jpg', pos: '43% 4%', size: '320%', cap: 'Clovis, détail du Baptême de Clovis, Maître de Saint-Gilles, vers 1500', lic: 'Domaine public', page: 'https://commons.wikimedia.org/wiki/File:Saint_Remigius_baptizes_Clovis_I_(Detail).jpg' },
+    intro: 'Le Chronoscope te dépose dans une cour de Reims, une nuit d\'hiver. On a tendu des tentures peintes entre les maisons, l\'encens flotte déjà jusqu\'à la rue. Demain, le roi des Francs sera baptisé par l\'évêque Remi. Dans une salle à peine éclairée, un homme d\'une trentaine d\'années, cheveux longs de roi franc, fait tourner une hache entre ses mains. Il n\'a pas l\'air de quelqu\'un qui prie.',
+    seal: ['Il t\'avoue qu\'il a fait promettre à Remi une chose : si ses guerriers refusent de le suivre, il ne se fera pas baptiser.', 'Il te confie que les évêques de Gaule lui ont fait savoir qu\'ils le soutiendraient contre les rois goths, s\'il devenait catholique.', 'Il te glisse, en baissant la voix : « Les autres rois barbares sont ariens. Si je prends le Dieu des évêques, toute la Gaule romaine sera derrière moi. C\'est ça, ma vraie conversion. »'],
+    start: ['a1', 'b1', 'c1', 'd1'],
+    nodes: {
+      a1: { mood: 'froid', say: 'Qui t\'a laissé entrer ? Les gardes dorment, ou tu es un sorcier ? Parle vite, étranger. Demain je deviens chrétien, et ce soir je n\'ai pas envie de sermons.',
+        opts: [
+          { t: 'Je ne viens pas vous sermonner. Je viens comprendre.', tr: 8, go: 'a2', j: 'Je l\'ai trouvé seul, une hache entre les mains, la veille de son baptême. Je lui ai dit que je venais comprendre, pas sermonner. Il a posé la hache.' },
+          { t: 'Vous avez peur, roi des Francs ?', tr: -4, go: 'a2', r: 'Peur ? J\'ai pris Soissons à quinze mille Romains, étranger. Je n\'ai pas peur. Je réfléchis. Ce n\'est pas la même chose.', j: 'Je lui ai demandé s\'il avait peur. Il m\'a rappelé Soissons, sèchement. Il ne craint rien, dit-il, il réfléchit.' },
+          { t: 'Pourquoi vous faire baptiser ?', tr: 2, go: 'a2', j: 'J\'ai posé la question évidente : pourquoi un roi païen se fait-il baptiser ?' }
+        ] },
+      a2: { mood: 'tendu', say: 'L\'an dernier, contre les Alamans, à Tolbiac, mes hommes reculaient. J\'ai crié vers le ciel : Dieu de Clotilde, donne-moi la victoire et je croirai en toi. Les Alamans ont fui. Un roi tient sa parole.',
+        fact: { k: 'legende', t: 'Le vœu de Tolbiac vient de Grégoire de Tours, qui écrit près d\'un siècle plus tard. Le récit imite celui de l\'empereur Constantin : les historiens le prennent avec prudence.', q: 'Selon Grégoire de Tours, quel vœu Clovis fait-il pendant la bataille contre les Alamans ?', a: 'Il promet de se convertir au Dieu de Clotilde s\'il remporte la victoire. Récit de Grégoire de Tours, inspiré de Constantin, à prendre avec prudence.' },
+        opts: [
+          { t: 'Et vous croyez vraiment à ce miracle ?', tr: 5, go: 'a3', j: 'Il m\'a raconté le vœu de Tolbiac : le Dieu de Clotilde contre une victoire. J\'ai osé lui demander s\'il y croyait vraiment.' },
+          { t: 'Clotilde doit être heureuse.', tr: 4, go: 'a3', r: 'Heureuse ? Elle me le demande depuis notre mariage. Elle a fait baptiser nos fils sans me demander mon avis. Le premier est mort dans ses langes blancs. Je lui en ai voulu, longtemps.', j: 'Clotilde réclame ce baptême depuis leur mariage. Leur premier fils, baptisé, est mort tout petit. Il lui en a voulu longtemps, m\'a-t-il dit.' }
+        ] },
+      a3: { mood: 'calme', say: 'Je crois en ce qui gagne, étranger. Wotan ne m\'a jamais donné une bataille. Ce Dieu-là, si. Demain, Remi me dira de courber la tête. Je la courberai. Une seule fois.',
+        fact: { k: 'fait', t: 'Clovis est baptisé à Reims par l\'évêque Remi, un jour de Noël. L\'année reste discutée : la tradition dit 496, des historiens proposent 498 ou 499, voire 508.', q: 'Où, par qui et quand Clovis est-il baptisé ?', a: 'À Reims, par l\'évêque Remi, un jour de Noël. L\'année est discutée : 496 selon la tradition, peut-être 498 ou 499, voire 508.' },
+        opts: [
+          { t: 'Une seule fois ?', tr: 5, go: 'end', r: 'Devant Dieu, oui. Devant les hommes, jamais. Va dormir, étranger. Si tu reviens demain soir, on parlera vraiment, autour d\'un feu et d\'une cruche.', j: 'Il courbera la tête devant Dieu, une seule fois, dit-il. Devant les hommes, jamais.' },
+          { t: 'Que diront vos guerriers ?', tr: 6, go: 'end', r: 'Bonne question. Celle que je me pose depuis une semaine. Reviens me voir, toi. Tu poses les questions que mes conseillers n\'osent pas poser.', j: 'Je lui ai demandé ce que diraient ses guerriers. C\'est, m\'a-t-il avoué, la question qui l\'empêche de dormir.' }
+        ] },
+
+      b1: { mood: 'chaud', say: 'Le sorcier revient ! Assieds-toi. Ici, on boit de la cervoise, pas du vin de messe. Alors, que veux-tu savoir sur le roi des Francs ?',
+        opts: [
+          { t: 'Comment devient-on roi à quinze ans ?', tr: 6, go: 'b2', j: 'Autour du feu, avec de la cervoise, je lui ai demandé comment on devient roi à quinze ans.' },
+          { t: 'Racontez-moi le vase de Soissons.', tr: 4, go: 'b3', j: 'Je lui ai demandé l\'histoire du vase de Soissons. Il a ri, d\'un rire pas très rassurant.' }
+        ] },
+      b2: { mood: 'calme', say: 'Mon père Childéric est mort, j\'avais quinze ans. On m\'a élevé sur un bouclier, à Tournai. J\'avais une petite bande de guerriers et un royaume grand comme un champ. Les Romains de Syagrius tenaient tout le reste.',
+        fact: { k: 'fait', t: 'En 481, à environ quinze ans, Clovis succède à son père Childéric comme roi des Francs saliens de Tournai.', q: 'En quelle année et à quel âge Clovis devient-il roi, et où ?', a: 'En 481, vers quinze ans, roi des Francs saliens de Tournai, à la mort de son père Childéric.' },
+        opts: [
+          { t: 'Et vous avez battu Syagrius.', tr: 5, go: 'b3', r: 'À Soissons, en 486. Le dernier général romain de Gaule. Il a fui chez les Wisigoths, qui me l\'ont rendu. Je l\'ai fait exécuter. On ne laisse pas vivre un ancien maître.', j: 'Il a battu Syagrius à Soissons en 486. Les Wisigoths le lui ont livré, et il l\'a fait exécuter. On ne laisse pas vivre un ancien maître, dit-il.' }
+        ] },
+      b3: { mood: 'tendu', say: 'Le vase. Après Soissons, je voulais rendre un vase précieux à un évêque. Un de mes guerriers l\'a fendu d\'un coup de hache : « Tu n\'auras que ta part, comme les autres. » J\'ai souri. J\'ai attendu un an.',
+        fact: { k: 'legende', t: 'L\'anecdote du vase de Soissons est rapportée par Grégoire de Tours. Elle est célèbre, mais impossible à vérifier.', q: 'Que raconte l\'anecdote du vase de Soissons ?', a: 'Un guerrier brise d\'un coup de hache un vase que Clovis voulait rendre à un évêque. Un an plus tard, Clovis le tue en revue. Récit de Grégoire de Tours, invérifiable.' },
+        opts: [
+          { t: 'Et un an plus tard ?', tr: 6, go: 'b4', j: 'Un guerrier a brisé le vase réservé à l\'évêque. Clovis a souri, et attendu un an. J\'ai demandé la suite, sans être sûr de vouloir l\'entendre.' },
+          { t: 'C\'est un peu rancunier, non ?', tr: -2, go: 'b4', r: 'Rancunier ? Non. Patient. Un roi qui laisse un homme lui dire non devant tous n\'est plus roi le lendemain.', j: 'Je l\'ai trouvé rancunier. Il préfère « patient ». Un roi contredit devant tous n\'est plus roi le lendemain.' }
+        ] },
+      b4: { mood: 'froid', say: 'À la revue des troupes, je suis passé devant lui. J\'ai jeté sa hache par terre : mal entretenue. Il s\'est penché pour la ramasser, et je lui ai fendu le crâne. « Souviens-toi du vase de Soissons. » Plus personne ne m\'a contredit.',
+        opts: [
+          { t: 'Et demain, vous devenez chrétien.', tr: 6, go: 'end', r: 'Oui. Étrange, hein ? Reviens quand tu voudras savoir ce que je n\'ai dit à personne. Mais il faudra le mériter.', j: 'Il lui a fendu le crâne pendant une revue : « Souviens-toi du vase de Soissons. » Et demain, il devient chrétien. Il a trouvé ça étrange, lui aussi.' }
+        ] },
+
+      c1: { mood: 'triste', say: 'Ferme la porte. Si mes guerriers m\'entendaient, ils me prendraient pour une femme. Je vais te dire ce qui me tient éveillé.',
+        opts: [
+          { t: 'Je vous écoute.', tr: 6, go: 'c2', j: 'Il m\'a fait fermer la porte. Ce que ses guerriers ne doivent pas entendre, il me l\'a dit à moi.' },
+          { t: 'Vous pouvez me faire confiance.', tr: 4, go: 'c2', r: 'Je ne fais confiance à personne. Mais toi, tu n\'as ni terres ni frères. Tu ne peux rien me prendre.', j: 'Il ne fait confiance à personne. Moi, je n\'ai ni terres ni frères : je ne peux rien lui prendre.' }
+        ] },
+      c2: { mood: 'triste', say: 'Mes dieux sont ceux de mon père, et de son père avant lui. Demain, je les renie devant tout mon peuple. Si Wotan existe, il ne me le pardonnera pas. Et si mes hommes refusent de me suivre, je ne serai plus rien.',
+        opts: [
+          { t: 'Vos hommes vous suivront.', tr: 6, go: 'c3', r: 'Remi m\'a dit la même chose. Je les ai réunis. Avant que j\'ouvre la bouche, ils ont crié qu\'ils renonçaient aux dieux mortels. Trois mille, dit-on. Trop beau pour être vrai, non ?', j: 'Il a réuni ses hommes avant le baptême. Ils auraient crié qu\'ils renonçaient aux dieux mortels. Trois mille, dit-on. Il trouve ça trop beau pour être vrai.' },
+          { t: 'Vous pourriez encore renoncer.', tr: -3, go: 'c3', r: 'Renoncer ? Devant Clotilde, devant Remi, devant les évêques de toute la Gaule ? Non. On ne recule pas d\'un pas quand toute la Gaule vous regarde.', j: 'Je lui ai dit qu\'il pouvait encore renoncer. Il m\'a répondu qu\'on ne recule pas quand toute la Gaule vous regarde.' }
+        ] },
+      c3: { mood: 'tendu', say: 'Et il y a Clotilde. Elle est catholique, nièce du roi des Burgondes. Sa famille a tué ses parents. Elle prie pour moi chaque nuit. Je ne sais pas si c\'est de l\'amour ou de la stratégie. Peut-être les deux.',
+        fact: { k: 'fait', t: 'Clotilde, princesse burgonde catholique, épouse Clovis vers 493. Elle joue un rôle clé dans sa conversion, selon Grégoire de Tours.', q: 'Qui est Clotilde et quel rôle joue-t-elle dans la conversion de Clovis ?', a: 'Une princesse burgonde catholique, épouse de Clovis vers 493. Selon Grégoire de Tours, elle le pousse vers le baptême.' },
+        opts: [
+          { t: 'Les deux, c\'est le meilleur mariage.', tr: 6, go: 'c4', j: 'Il ne sait pas si Clotilde prie pour lui par amour ou par stratégie. Je lui ai dit que les deux ensemble faisaient le meilleur mariage.' },
+          { t: 'Vous l\'aimez ?', tr: 7, go: 'c4', j: 'Je lui ai demandé s\'il aimait Clotilde. Il a longtemps regardé le feu.' }
+        ] },
+      c4: { mood: 'chaud', say: 'Je l\'aime assez pour lui donner la seule chose qu\'elle m\'ait jamais demandée. Tu vois, sorcier : demain, ce n\'est pas seulement le roi qui se fait baptiser. C\'est un mari qui tient sa promesse.',
+        opts: [
+          { t: 'Merci de m\'avoir dit cela.', tr: 6, go: 'end', r: 'Ne le répète pas. Et reviens. Il me reste à te dire pourquoi les évêques m\'attendent avec autant d\'impatience.', j: 'Demain, ce n\'est pas seulement un roi qui se fait baptiser, m\'a-t-il dit. C\'est un mari qui tient sa promesse.' }
+        ] },
+
+      d1: { mood: 'tendu', say: 'Tu veux les secrets du royaume ? Écoute bien. Tous les autres rois barbares, les Goths, les Burgondes, sont chrétiens eux aussi. Mais ariens. Hérétiques, disent les évêques.',
+        opts: [
+          { t: 'Et vous, vous serez catholique.', tr: 6, go: 'd2', j: 'Les autres rois barbares sont chrétiens, mais ariens. Lui choisit d\'être catholique. J\'ai senti que c\'était tout sauf un hasard.' }
+        ] },
+      d2: { mood: 'chaud', say: 'Exactement. Les Gallo-Romains sont catholiques. Leurs évêques tiennent les villes, les routes, les greniers. Le jour où je partage leur foi, ils ne verront plus un barbare. Ils verront un protecteur.',
+        fact: { k: 'fait', t: 'En choisissant le catholicisme et non l\'arianisme des autres rois germaniques, Clovis gagne l\'appui des évêques et de la population gallo-romaine.', q: 'Pourquoi le choix du catholicisme plutôt que de l\'arianisme est-il un atout politique pour Clovis ?', a: 'Les Gallo-Romains et leurs évêques sont catholiques, alors que les autres rois germaniques sont ariens. Clovis gagne ainsi leur soutien.' },
+        opts: [
+          { t: 'C\'est donc un calcul politique.', tr: 5, go: 'd3', r: 'Calcul, foi : chez un roi, c\'est la même chose, sorcier. Dieu m\'a donné Tolbiac. Les évêques me donneront la Gaule.', j: 'Calcul ou foi ? Chez un roi, c\'est la même chose, m\'a-t-il répondu. Dieu lui a donné Tolbiac, les évêques lui donneront la Gaule.' },
+          { t: 'Et les Wisigoths d\'Alaric ?', tr: 7, go: 'd3', j: 'J\'ai prononcé le nom d\'Alaric, roi des Wisigoths. Ses yeux se sont allumés.' }
+        ] },
+      d3: { mood: 'tendu', say: 'Alaric tient tout le sud, jusqu\'aux Pyrénées. Un hérétique qui règne sur des catholiques. Un jour, j\'irai le chercher. Et les évêques d\'Aquitaine m\'ouvriront les portes.',
+        fact: { k: 'fait', t: 'En 507, à Vouillé, Clovis bat et tue Alaric II, roi des Wisigoths. Les Francs prennent l\'Aquitaine.', q: 'Que se passe-t-il à Vouillé en 507 ?', a: 'Clovis bat et tue Alaric II, roi des Wisigoths. Les Francs s\'emparent de l\'Aquitaine.' },
+        opts: [
+          { t: 'Et ensuite, une capitale ?', tr: 6, go: 'd4', j: 'Un jour, il ira chercher Alaric dans le sud, et les évêques lui ouvriront les portes. Je lui ai demandé où il installerait sa capitale.' }
+        ] },
+      d4: { mood: 'chaud', say: 'Paris. Une île sur la Seine, facile à défendre, au milieu de tout. Tu ris ? Retiens bien ce nom, sorcier. Dans mille ans, on parlera encore de ce que j\'ai commencé cette nuit.',
+        opts: [
+          { t: 'Plus de mille cinq cents ans, même.', tr: 8, go: 'end', r: 'Mille cinq cents ans ? Tu es bien un sorcier. Va, maintenant. Demain, je courbe la tête. Une seule fois.', j: 'Il choisira Paris, une île sur la Seine. Je lui ai dit qu\'on parlerait de lui plus de mille cinq cents ans plus tard. Il m\'a traité de sorcier, avec un plaisir évident.' }
+        ] }
+    }
   }
 };
 function sceneOfAct(a) { return Object.keys(SCENES).filter(k => SCENES[k].act === a); }
@@ -4833,7 +4923,7 @@ function vyState() {
   const V = S.vy;
   V.ecus = typeof V.ecus === 'number' ? V.ecus : 0;
   V.trust = V.trust || {}; V.lv = V.lv || {}; V.done = V.done || {}; V.journal = V.journal || []; V.cards = V.cards || {};
-  if (!V.gift) { V.gift = 1; V.ecus += 40; }
+  if ((V.gift || 0) < 2) { V.ecus += V.gift ? 460 : 500; V.gift = 2; }
   return V;
 }
 const _addXp = addXp;
@@ -4913,8 +5003,8 @@ function levelsHTML(id) {
 }
 function viewVoyageHome(id) {
   const sc = SCENES[id], p = P[sc.who];
-  return '<button class="back" data-do="hub">‹ Acte ' + ROMAN[sc.act] + '</button><section class="hub"><p class="eyebrow">Voyage · ' + esc(sc.date) + '</p><h1>' + esc(p.n) + ' à Beaugency</h1>' +
-    '<p class="lead">Remonte le temps jusqu\'au jour où un mariage royal se défait. Chaque niveau d\'intimité ouvre une conversation plus profonde. Tes choix font monter ou baisser sa confiance, et chaque visite s\'écrit dans ton journal.</p>' +
+  return '<button class="back" data-do="hub">‹ Acte ' + ROMAN[sc.act] + '</button><section class="hub"><p class="eyebrow">Voyage · ' + esc(sc.date) + '</p><h1>' + esc(sc.title || p.n) + '</h1>' +
+    '<p class="lead">' + esc(sc.lead) + ' Chaque niveau d\'intimité ouvre une conversation plus profonde. Tes choix font monter ou baisser sa confiance, et chaque visite s\'écrit dans ton journal.</p>' +
     '<p class="hint">Les écus se gagnent en jouant : la moitié de chaque gain d\'XP, en quiz, flashcards, duels et séries.</p></section>' + levelsHTML(id) +
     '<div class="nav"><button class="btn ghost" data-do="vy-journal">Journal de bord</button></div>';
 }
