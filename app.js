@@ -3376,7 +3376,7 @@ function emblem(sym, size, state) {
 }
 const SKY = [['#16226A', '#3A4FB0'], ['#4A1D3A', '#B0573A'], ['#2A1A08', '#9C6B22']];
 function eraOf(a) { return a >= 14 ? 2 : a >= 11 ? 1 : 0; }
-function banner(a) {
+function bannerSVG(a) {
   const U = (id, x, y, w, col) => '<use href="#s-' + id + '" x="' + x + '" y="' + y + '" width="' + w + '" height="' + w + '" style="color:' + col + '"/>';
   const GOLD = '#E3BE5B', RED = '#D4513A', PARCH = '#F3EBD2';
   let m = '';
@@ -3397,6 +3397,13 @@ function banner(a) {
     '<circle cx="316" cy="34" r="15" fill="#E3BE5B"/><circle cx="316" cy="34" r="20" fill="none" stroke="#E3BE5B" stroke-width="1.3" opacity=".5"/>' +
     '<path d="M0 108 Q60 88 120 104 T240 98 T360 106 V140 H0 Z" fill="rgba(0,0,0,.32)"/>' +
     '<path d="M0 124 Q90 110 180 122 T360 119 V140 H0 Z" fill="rgba(0,0,0,.5)"/>' + m + '</svg>';
+}
+
+const BANNERS = [["https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Master_of_Saint_Giles%2C_The_Baptism_of_Clovis%2C_c._1500%2C_NGA_41597.jpg/960px-Master_of_Saint_Giles%2C_The_Baptism_of_Clovis%2C_c._1500%2C_NGA_41597.jpg", "Le Baptême de Clovis, Maître de Saint-Gilles, vers 1500", "50% 30%"], ["https://upload.wikimedia.org/wikipedia/commons/5/5c/Chilp%C3%A9ric_et_Fr%C3%A9d%C3%A9gonde_%C3%A0_cheval.jpg", "Chilpéric et Frédégonde à cheval, miniature des Grandes Chroniques de France", "50% 45%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Dagobert_visitant_le_chantier_de_la_construction_de_Saint-Denis.jpg/960px-Dagobert_visitant_le_chantier_de_la_construction_de_Saint-Denis.jpg", "Dagobert visite le chantier de Saint-Denis, Robinet Testard, XVe siècle", "50% 40%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Steuben_-_Bataille_de_Poitiers.png/960px-Steuben_-_Bataille_de_Poitiers.png", "La Bataille de Poitiers, Charles de Steuben, 1837", "50% 40%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Sacre_de_Charlemagne.jpg/960px-Sacre_de_Charlemagne.jpg", "Le Sacre de Charlemagne, Jean Fouquet, vers 1455-1460", "50% 40%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Si%C3%A8ge_de_Paris_par_les_Normands%2C_l%27an_885%2C_G.30880.jpg/960px-Si%C3%A8ge_de_Paris_par_les_Normands%2C_l%27an_885%2C_G.30880.jpg", "Le Siège de Paris par les Normands en 885, gravure de Louis-Henri Brévière", "50% 50%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/The_crowning_of_Louis_VI_in_Orl%C3%A9ans.jpg/960px-The_crowning_of_Louis_VI_in_Orl%C3%A9ans.jpg", "Le Sacre de Louis VI à Orléans, Jean Fouquet, vers 1455-1460", "50% 45%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Bataille_de_Bouvines_gagnee_par_Philippe_Auguste.jpg/960px-Bataille_de_Bouvines_gagnee_par_Philippe_Auguste.jpg", "La Bataille de Bouvines, Horace Vernet, 1827", "50% 40%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Philip_iv_and_family._2.jpg/960px-Philip_iv_and_family._2.jpg", "Philippe le Bel et sa famille, miniature du XIVe siècle", "50% 30%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Battle_of_crecy_froissart.jpg/960px-Battle_of_crecy_froissart.jpg", "La Bataille de Crécy, Chroniques de Froissart, Loyset Liédet, XVe siècle", "50% 45%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/The_Field_of_the_Cloth_of_Gold.jpg/960px-The_Field_of_the_Cloth_of_Gold.jpg", "Le Camp du Drap d'or, vers 1545, Royal Collection", "50% 45%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Fran%C3%A7ois_Dubois_-_Le_massacre_de_la_Saint-Barth%C3%A9lemy_-_729_-DUBOIS_num4000_nr.jpg/960px-Fran%C3%A7ois_Dubois_-_Le_massacre_de_la_Saint-Barth%C3%A9lemy_-_729_-DUBOIS_num4000_nr.jpg", "Le Massacre de la Saint-Barthélemy, François Dubois, vers 1572-1584", "50% 50%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Siege_of_La_Rochelle_1881_Henri_Motte_1846_1922.jpg/960px-Siege_of_La_Rochelle_1881_Henri_Motte_1846_1922.jpg", "Richelieu au siège de La Rochelle, Henri Motte, 1881", "50% 45%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Chateau_de_Versailles_1668_Pierre_Patel.jpg/960px-Chateau_de_Versailles_1668_Pierre_Patel.jpg", "Le Château de Versailles en 1668, Pierre Patel", "50% 55%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Salon_de_Madame_Geoffrin.jpg/960px-Salon_de_Madame_Geoffrin.jpg", "Le Salon de Madame Geoffrin en 1755, Lemonnier, 1812", "50% 45%"]];
+function banner(a, cap) {
+  const b = BANNERS[a - 1];
+  if (!b) return bannerSVG(a);
+  return '<span class="bn">' + bannerSVG(a) + '<img src="' + b[0] + '" alt="" loading="lazy" referrerpolicy="no-referrer" style="object-position:' + b[2] + '" onerror="this.remove()"></span>' + (cap ? '<small class="bn-cap">' + esc(b[1]) + ', domaine public (Wikimedia Commons)</small>' : '');
 }
 
 /* ---------- aides de données ---------- */
@@ -3690,7 +3697,7 @@ function viewHub() {
     ['quiz', 'Le quiz', s.quiz >= 0 ? 'Meilleur score : ' + s.quiz + '/10 (7 requis)' : '10 questions, 7 bonnes réponses requises', st[3], 'Jouer'],
     ['frise', 'La frise', s.frise >= 0 ? 'Meilleur score : ' + s.frise + '/8' : 'Remets 8 événements dans l\'ordre', st[4], 'Jouer']
   ];
-  let h = '<button class="back" data-do="back">‹ Les actes</button><section class="hub"><div class="hub-ban">' + banner(a.id) + '</div>' +
+  let h = '<button class="back" data-do="back">‹ Les actes</button><section class="hub"><div class="hub-ban">' + banner(a.id) + '</div>' + '<small class="bn-cap">' + esc(BANNERS[a.id - 1][1]) + ', domaine public (Wikimedia Commons)</small>' +
     '<p class="eyebrow">Acte ' + a.num + ' · ' + a.a + ' à ' + a.b + '</p><h1>' + esc(a.title) + '</h1><p class="lead">' + esc(a.lead) + '</p>' +
     '<div class="wl">' + a.world.map(w => '<span><b>' + esc(w[0]) + '</b> ' + esc(w[1]) + '</span>').join('') + '</div></section><ol class="steps">';
   rows.forEach((r, i) => {
@@ -4688,6 +4695,7 @@ function ideaSheet(kind, ref, msg) {
     '<div class="nav"><button class="btn" data-do="idea-send" data-k="' + kind + '" data-ref="' + esc(ref || '') + '">Envoyer</button></div>';
 }
 function reportBtn(id) {
+  return '';
   if (!DBX || !MYID) return '';
   return '<div class="nav" style="justify-content:flex-start"><button class="btn ghost sm" data-do="idea-new" data-k="erreur" data-ref="' + id + '">Signaler une erreur</button></div>';
 }
