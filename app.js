@@ -3657,6 +3657,8 @@ function viewQuest() {
   if (ui.step === 'quiz') return viewQuiz();
   if (ui.step === 'frise') return viewFrise();
   if (ui.step === 'flash') return viewFlash();
+  if (ui.step === 'voyage') return ui.vy && ui.vy.mode === 'scene' ? viewVoyage() : viewVoyageHome((ui.vy && ui.vy.id) || 'beaugency');
+  if (ui.step === 'journal') return viewJournal();
   return viewHub();
 }
 function viewActs() {
@@ -3699,6 +3701,8 @@ function viewHub() {
   const fd = flashDeck(a.id), fk = fd.filter(c => (S.fc[a.id] || {})[c.id]).length;
   h += '<div class="flashrow"><span class="st-n">' + sym('t-cards') + '</span><span class="st-tx"><b>Flashcards détaillées</b><small>Facultatif · ' + fk + ' sur ' + fd.length + ' cartes maîtrisées</small></span>' +
     '<button class="btn sm ghost" data-do="step" data-s="flash">' + (fk && fk < fd.length ? 'Reprendre' : fk === fd.length ? 'Revoir' : 'Ouvrir') + '</button></div>';
+  sceneOfAct(a.id).forEach(id => { const sc = SCENES[id]; h += '<div class="flashrow vyrow"><span class="st-n">' + sym('s-sun') + '</span><span class="st-tx"><b>Voyage : ' + esc(P[sc.who].n) + ', ' + sc.year + '</b><small>Nouveau · conversation profonde, ' + vyState().ecus + ' écus en poche</small></span><button class="btn sm" data-do="vy-home" data-id="' + id + '">Partir</button></div>'; });
+  if (vyState().journal.some(e => e.parts.length)) h += '<div class="flashrow"><span class="st-n">' + sym('s-quill') + '</span><span class="st-tx"><b>Journal de bord</b><small>Tes visites, page après page</small></span><button class="btn sm ghost" data-do="vy-journal">Lire</button></div>';
   if (isDone(a.id)) h += '<p class="note ok">Acte terminé.' + (a.id < ACTS.length ? ' L\'acte ' + ROMAN[a.id + 1] + ' est ouvert.' : ' De Clovis à 1789 : voyage terminé. La Révolution attend son propre Chronoscope.') + '</p>';
   return h;
 }
@@ -4719,6 +4723,328 @@ Object.assign(DO, {
     try { await DBX.doc('admin/status').set(st); } catch (e) { toast('Statut non enregistré', 'rank'); }
   }
 });
+
+/* VOYAGES : scènes de dialogue profondes, écus, sceau de confiance, journal de bord du voyageur */
+const WM = 'https://upload.wikimedia.org/wikipedia/commons/thumb/';
+const LEVELS_VY = [
+  { n: 'Audience', cost: 0, d: 'Ce qu\'elle veut bien dire en public.' },
+  { n: 'Entretien', cost: 30, d: 'Ses choix, ses calculs, sa personnalité.' },
+  { n: 'Confidences', cost: 80, d: 'Ses doutes, ses enfants, ce qui la blesse.' },
+  { n: 'Secrets de cour', cost: 150, d: 'Les rumeurs, les rivaux, ce qu\'elle prépare.' }
+];
+const SCENES = {
+  beaugency: {
+    act: 7, who: 'alienor', year: 1152, date: 'mars 1152', place: 'Beaugency, au bord de la Loire',
+    bg: { src: WM + '2/28/Louis_vii_and_alienor.jpg/960px-Louis_vii_and_alienor.jpg', cap: 'Le mariage de Louis VII et d\'Aliénor, Grandes Chroniques de France, XIVe siècle', lic: 'Domaine public', page: 'https://commons.wikimedia.org/wiki/File:Louis_vii_and_alienor.jpg' },
+    face: { src: WM + '2/2b/Fontevraud_Gisants_Alienor.jpg/960px-Fontevraud_Gisants_Alienor.jpg', pos: '12% 24%', size: '420%', cap: 'Gisant d\'Aliénor, abbaye de Fontevraud, vers 1204', lic: 'Domaine public, photo UAltmann', page: 'https://commons.wikimedia.org/wiki/File:Fontevraud_Gisants_Alienor.jpg' },
+    intro: 'Le Chronoscope te dépose dans une salle froide du château de Beaugency. Des évêques sortent en file, l\'air satisfait. Le concile vient de déclarer nul le mariage du roi Louis VII et d\'Aliénor d\'Aquitaine, pour cause de parenté trop proche. Près d\'une fenêtre, une femme d\'une trentaine d\'années regarde la Loire. Elle ne pleure pas. Elle compte.',
+    seal: ['Elle t\'avoue qu\'elle a demandé elle-même l\'annulation, dès Antioche, des années avant que les évêques ne s\'en mêlent.', 'Elle te confie qu\'un messager est déjà parti pour l\'Anjou, la veille même du concile.', 'Elle te glisse, presque en riant : « Si je n\'épouse pas Henri, ce sont ses ennemis qui m\'épouseront de force. Autant choisir mon roi. »'],
+    start: ['a1', 'b1', 'c1', 'd1'],
+    nodes: {
+      a1: { mood: 'froid', say: 'Encore un curieux. Les évêques sont partis, voyageur. Si tu viens voir pleurer la reine de France, tu arrives trop tard : je ne le suis plus depuis ce matin.',
+        opts: [
+          { t: 'Je ne viens pas vous voir pleurer. Je viens vous écouter.', tr: 8, go: 'a2', j: 'Je l\'ai trouvée à la fenêtre, droite comme une lance. Je lui ai dit que je venais l\'écouter, et j\'ai cru voir l\'ombre d\'un sourire.' },
+          { t: 'Majesté, c\'est une humiliation terrible.', tr: -4, go: 'a2', r: 'Une humiliation ? Pour qui, voyageur ? Regarde-les sortir. Ils croient m\'avoir renvoyée. Je repars avec l\'Aquitaine.', j: 'J\'ai parlé d\'humiliation. Elle m\'a corrigé sèchement : elle repart avec l\'Aquitaine, et c\'est le roi qui perd.' },
+          { t: 'Pourquoi le mariage est-il annulé ?', tr: 2, go: 'a2', j: 'J\'ai posé la question naïve du voyageur : pourquoi annuler un mariage de quinze ans ?' }
+        ] },
+      a2: { mood: 'calme', say: 'Officiellement ? Nous serions cousins au quatrième degré. Les évêques l\'ont découvert, figure-toi, après quinze ans de mariage et deux filles. L\'Église a parfois une mémoire étonnamment lente.',
+        fact: { k: 'fait', t: 'Le concile de Beaugency annule le mariage le 21 mars 1152, pour consanguinité.', q: 'Pour quel motif officiel le mariage de Louis VII et d\'Aliénor est-il annulé en 1152 ?', a: 'La consanguinité : ils sont cousins au quatrième degré. Annulation prononcée au concile de Beaugency, le 21 mars 1152.' },
+        opts: [
+          { t: 'Et la vraie raison ?', tr: 6, go: 'a3', j: 'Le motif officiel est la parenté. J\'ai demandé la vraie raison, et elle m\'a jaugé du regard.' },
+          { t: 'Vos deux filles, que vont-elles devenir ?', tr: 4, go: 'a3', r: 'Marie et Alix restent avec leur père. Ce sont des filles de France. Je ne les emmène pas. Ne me demande pas ce que cela me coûte.', j: 'Elle laisse ses deux filles, Marie et Alix, au roi. Elle m\'a interdit de lui demander ce que cela lui coûte.' }
+        ] },
+      a3: { mood: 'tendu', say: 'La vraie raison tient en un mot : un fils. Louis n\'en a pas eu de moi. Et puis… disons que j\'ai épousé un roi, et que j\'ai trouvé un moine.',
+        fact: { k: 'legende', t: '« J\'ai épousé un roi, j\'ai trouvé un moine » : la formule est rapportée par des chroniqueurs, mais rien ne prouve qu\'elle l\'ait dite ainsi.', q: 'Quelle phrase célèbre, peut-être légendaire, attribue-t-on à Aliénor sur Louis VII ?', a: '« J\'ai cru épouser un roi, j\'ai épousé un moine. » Rapportée par des chroniqueurs, sans preuve qu\'elle l\'ait prononcée.' },
+        opts: [
+          { t: 'Vous êtes dure avec lui.', tr: 3, go: 'end', r: 'Je suis juste. Louis est un homme bon. C\'est bien le problème : un royaume ne se gouverne pas avec de la bonté et des prières. Va, voyageur. Si tu veux en savoir plus, il faudra mériter un vrai entretien.', j: 'Je l\'ai trouvée dure avec Louis. « Juste », a-t-elle répondu. Il est bon, et c\'est bien le problème.' },
+          { t: 'Vous allez vous remarier ?', tr: 5, go: 'end', r: 'Quelle impertinence. Tu me plais. Reviens me voir quand nous aurons le temps de parler sérieusement, sans tous ces évêques derrière les portes.', j: 'J\'ai osé lui demander si elle se remarierait. Elle m\'a traité d\'impertinent, puis m\'a dit que je lui plaisais.' }
+        ] },
+
+      b1: { mood: 'calme', say: 'Tu es revenu. Assieds-toi, il fait moins froid près du feu. Demande-moi ce que tu veux, mais demande-le bien.',
+        opts: [
+          { t: 'Qui êtes-vous, sans couronne ?', tr: 6, go: 'b2', j: 'Au coin du feu, je lui ai demandé qui elle était sans couronne.' },
+          { t: 'Parlez-moi de l\'Aquitaine.', tr: 4, go: 'b2', j: 'Je l\'ai fait parler de l\'Aquitaine, et sa voix a changé.' }
+        ] },
+      b2: { mood: 'chaud', say: 'Je suis la duchesse d\'Aquitaine et comtesse de Poitou. Mes terres vont de la Loire aux Pyrénées. C\'est plus grand que le domaine du roi de France. Mon grand-père, Guillaume, écrivait des chansons d\'amour en langue d\'oc. Chez moi, on chante. À Paris, on prie.',
+        fact: { k: 'fait', t: 'Son grand-père Guillaume IX d\'Aquitaine est considéré comme le premier troubadour connu.', q: 'Qui est considéré comme le premier troubadour connu, et quel est son lien avec Aliénor ?', a: 'Guillaume IX, duc d\'Aquitaine : c\'est le grand-père d\'Aliénor.' },
+        opts: [
+          { t: 'Vous n\'avez jamais aimé Paris ?', tr: 5, go: 'b3', j: 'Ses terres sont plus vastes que celles du roi. Chez elle on chante, à Paris on prie. J\'ai compris qu\'elle n\'avait jamais aimé Paris.' },
+          { t: 'Et la croisade avec Louis ?', tr: 3, go: 'b3', r: 'La croisade. Deux ans de poussière, de défaites et de sermons. Louis voulait prier à Jérusalem, moi je voulais gagner la guerre. Devine qui a eu raison.', j: 'Elle a évoqué la croisade : deux ans de poussière et de sermons. Louis voulait prier, elle voulait gagner.' }
+        ] },
+      b3: { mood: 'tendu', say: 'On m\'a reproché d\'être trop libre, trop vive, trop présente au conseil. Bernard de Clairvaux me regardait comme on regarde un incendie. Les hommes d\'Église n\'aiment pas les femmes qui parlent politique.',
+        opts: [
+          { t: 'Vous étiez en avance sur votre temps.', tr: -2, go: 'b4', r: 'En avance ? Non, voyageur. J\'étais exactement de mon temps. Une héritière, c\'est un royaume qui marche. Je l\'ai simplement compris avant eux.', j: 'Je l\'ai dite en avance sur son temps. Elle a refusé le compliment : elle était de son temps, elle l\'avait juste compris avant les autres.' },
+          { t: 'Qu\'est-ce que vous vouliez vraiment ?', tr: 7, go: 'b4', j: 'Je lui ai demandé ce qu\'elle voulait vraiment. Elle a mis longtemps à répondre.' }
+        ] },
+      b4: { mood: 'chaud', say: 'Je voulais compter. Pas être une dot qu\'on range dans un coffre. Aujourd\'hui, pour la première fois depuis mes quinze ans, je choisis seule. C\'est étrange. C\'est grisant.',
+        opts: [
+          { t: 'Alors, que choisissez-vous ?', tr: 6, go: 'end', r: 'Ah. Ça, c\'est une question pour une conversation plus intime. Tu sais où me trouver.', j: 'Pour la première fois depuis ses quinze ans, elle choisit seule. Elle a refusé de me dire quoi. Pas encore.' }
+        ] },
+
+      c1: { mood: 'triste', say: 'Ferme la porte. Ce que je vais te dire ne sortira pas de cette pièce, ou je saurai qui l\'a laissé sortir.',
+        opts: [
+          { t: 'Je vous le jure.', tr: 6, go: 'c2', j: 'Elle m\'a fait fermer la porte et jurer le silence. J\'ai juré. Ce journal ne compte pas, je crois.' },
+          { t: 'Pourquoi me faire confiance ?', tr: 4, go: 'c2', r: 'Parce que tu viens d\'ailleurs, et que tu repartiras. Un confident qui disparaît, c\'est un luxe de reine.', j: 'Elle me fait confiance parce que je repartirai. Un confident qui disparaît, dit-elle, est un luxe de reine.' }
+        ] },
+      c2: { mood: 'triste', say: 'Mes filles. Marie a sept ans, Alix à peine deux. Je ne les verrai presque plus. On dira que je suis une mère sans cœur. On le dit déjà.',
+        opts: [
+          { t: 'Vous auriez pu vous battre pour elles.', tr: -3, go: 'c3', r: 'Contre le roi de France et l\'Église réunis ? Pour perdre, et elles avec ? Non. Je les ai laissées là où elles seront princesses.', j: 'Je lui ai dit qu\'elle aurait pu se battre pour ses filles. Elle m\'a répondu qu\'elle aurait perdu, et elles avec.' },
+          { t: 'Ce choix vous coûte.', tr: 8, go: 'c3', j: 'Je lui ai seulement dit que ce choix lui coûtait. Elle a détourné les yeux vers la Loire.' }
+        ] },
+      c3: { mood: 'tendu', say: 'Et puis il y a Antioche. Tu as entendu les rumeurs ? Mon oncle Raymond, les longues conversations en langue d\'oc, la jalousie de Louis… On a dit des choses ignobles.',
+        fact: { k: 'legende', t: 'La liaison d\'Aliénor avec son oncle Raymond de Poitiers à Antioche, en 1148, est une rumeur. Aucune preuve ne l\'atteste.', q: 'Que dit la rumeur d\'Antioche, en 1148, et est-elle prouvée ?', a: 'Qu\'Aliénor aurait eu une liaison avec son oncle Raymond de Poitiers, prince d\'Antioche. C\'est une rumeur, sans preuve.' },
+        opts: [
+          { t: 'Était-ce vrai ?', tr: -5, go: 'c4', r: 'Tu oses ? Hm. Raymond était le seul homme de cette croisade qui parlait stratégie avec moi. Voilà tout mon crime.', j: 'J\'ai osé demander si les rumeurs d\'Antioche étaient vraies. Son regard m\'a glacé. Raymond, dit-elle, était le seul à lui parler stratégie.' },
+          { t: 'Que s\'est-il passé, selon vous ?', tr: 6, go: 'c4', j: 'Elle m\'a raconté Antioche à sa manière : un oncle qui la traitait en égale, un mari jaloux qui l\'a emmenée de force.' }
+        ] },
+      c4: { mood: 'chaud', say: 'Louis m\'a fait enlever d\'Antioche en pleine nuit. Ce soir-là, j\'ai compris que ce mariage était fini. Il a fallu quatre ans pour que les évêques le comprennent aussi.',
+        opts: [
+          { t: 'Merci de m\'avoir dit tout cela.', tr: 6, go: 'end', r: 'Ne me remercie pas. Reviens plutôt. Il me reste des secrets, et ceux-là valent de l\'or.', j: 'Ce soir-là à Antioche, le mariage était fini. Il a fallu quatre ans aux évêques pour s\'en apercevoir.' }
+        ] },
+
+      d1: { mood: 'tendu', say: 'Tu veux les secrets de la cour ? Alors écoute bien, car demain je pars pour Poitiers, et la route n\'est pas sûre.',
+        opts: [
+          { t: 'Pas sûre ? Qui vous menace ?', tr: 5, go: 'd2', j: 'Demain elle part pour Poitiers. La route n\'est pas sûre, m\'a-t-elle dit à voix basse.' }
+        ] },
+      d2: { mood: 'tendu', say: 'Une duchesse sans mari, c\'est un trésor sans gardien. Thibaut de Blois veut m\'enlever pour m\'épouser. Le jeune Geoffroy d\'Anjou aussi. Je le sais par mes espions.',
+        fact: { k: 'fait', t: 'Sur la route du retour, Thibaut de Blois puis Geoffroy d\'Anjou tentent de l\'enlever pour l\'épouser. Elle leur échappe.', q: 'Que se passe-t-il sur la route d\'Aliénor vers Poitiers après l\'annulation de 1152 ?', a: 'Thibaut de Blois puis Geoffroy d\'Anjou, frère d\'Henri, tentent de l\'enlever pour l\'épouser. Elle leur échappe.' },
+        opts: [
+          { t: 'Geoffroy ? Le frère d\'Henri Plantagenêt ?', tr: 7, go: 'd3', j: 'Thibaut de Blois et Geoffroy d\'Anjou veulent l\'enlever pour l\'épouser. Geoffroy est le frère d\'Henri Plantagenêt. Elle a souri quand j\'ai fait le lien.' },
+          { t: 'Prenez une escorte.', tr: 2, go: 'd3', r: 'J\'ai mieux qu\'une escorte. J\'ai un plan, et il s\'appelle Henri.', j: 'Je lui ai conseillé une escorte. Elle a mieux : un plan qui s\'appelle Henri.' }
+        ] },
+      d3: { mood: 'chaud', say: 'Henri, duc de Normandie, comte d\'Anjou. Dix-neuf ans, onze de moins que moi. Roux, colérique, infatigable. Et peut-être bientôt roi d\'Angleterre. Nous nous sommes vus à Paris l\'été dernier.',
+        fact: { k: 'fait', t: 'Le 18 mai 1152, deux mois après l\'annulation, Aliénor épouse Henri Plantagenêt à Poitiers.', q: 'Qui Aliénor épouse-t-elle le 18 mai 1152, deux mois après Beaugency ?', a: 'Henri Plantagenêt, duc de Normandie et comte d\'Anjou, futur Henri II d\'Angleterre. Mariage à Poitiers.' },
+        opts: [
+          { t: 'Le roi Louis va devenir fou de rage.', tr: 6, go: 'd4', j: 'Elle va épouser Henri, onze ans de moins qu\'elle, peut-être bientôt roi d\'Angleterre. J\'ai prédit la rage du roi Louis.' },
+          { t: 'C\'est un mariage d\'amour ?', tr: 4, go: 'd4', r: 'D\'amour, de terres et de vengeance. Les trois ensemble, voyageur, c\'est le meilleur mariage qui soit.', j: 'Mariage d\'amour ? « D\'amour, de terres et de vengeance », a-t-elle tranché.' }
+        ] },
+      d4: { mood: 'chaud', say: 'Quand Louis apprendra la nouvelle, l\'Aquitaine, l\'Anjou et la Normandie seront dans les mêmes mains. Plus de terres que le roi de France lui-même. Il a voulu se débarrasser d\'une femme. Il va hériter d\'un rival.',
+        opts: [
+          { t: 'Vous venez de lancer trois siècles de guerre.', tr: 8, go: 'end', r: 'Trois siècles ? Tu exagères sûrement, voyageur. Mais l\'idée me plaît. Va, maintenant. Et garde tes secrets aussi bien que tu as gardé les miens.', j: 'Je lui ai dit qu\'elle lançait trois siècles de guerre. L\'idée lui a plu. Je n\'ai pas eu le cœur de lui dire que la guerre de Cent Ans lui donnerait presque raison.' }
+        ] }
+    }
+  }
+};
+function sceneOfAct(a) { return Object.keys(SCENES).filter(k => SCENES[k].act === a); }
+
+/* ---------- état ---------- */
+function vyState() {
+  S.vy = S.vy || {};
+  const V = S.vy;
+  V.ecus = typeof V.ecus === 'number' ? V.ecus : 0;
+  V.trust = V.trust || {}; V.lv = V.lv || {}; V.done = V.done || {}; V.journal = V.journal || []; V.cards = V.cards || {};
+  if (!V.gift) { V.gift = 1; V.ecus += 40; }
+  return V;
+}
+const _addXp = addXp;
+addXp = function (n, why) { if (n > 0) { const V = vyState(); V.ecus += Math.ceil(n / 2); } _addXp(n, why); };
+const _flashDeck = flashDeck;
+flashDeck = function (a) { const out = _flashDeck(a), V = vyState(); (V.cards[a] || []).forEach(c => out.push({ id: c.id, f: esc(c.q) + '<small class="rc-tag">Carte du journal</small>', b: esc(c.a) })); return out; };
+
+/* ---------- son d'ambiance, synthétisé (aucun fichier) ---------- */
+const SND = { ctx: null, on: false, nodes: [] };
+function soundToggle() {
+  if (SND.on) { SND.nodes.forEach(n => { try { n.stop(); } catch (e) { /* déjà arrêté */ } }); SND.nodes = []; SND.on = false; return; }
+  try {
+    const C = SND.ctx || (SND.ctx = new (window.AudioContext || window.webkitAudioContext)());
+    C.resume && C.resume();
+    const len = C.sampleRate * 4, buf = C.createBuffer(1, len, C.sampleRate), d = buf.getChannelData(0);
+    let last = 0; for (let i = 0; i < len; i++) { last = (last + 0.02 * (Math.random() * 2 - 1)) / 1.02; d[i] = last * 3.5; }
+    const src = C.createBufferSource(); src.buffer = buf; src.loop = true;
+    const f = C.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 500;
+    const g = C.createGain(); g.gain.value = 0.18;
+    const lfo = C.createOscillator(), lg = C.createGain(); lfo.frequency.value = 0.12; lg.gain.value = 260; lfo.connect(lg); lg.connect(f.frequency);
+    src.connect(f); f.connect(g); g.connect(C.destination); src.start(); lfo.start();
+    SND.nodes = [src, lfo]; SND.on = true;
+  } catch (e) { toast('Son indisponible sur cet appareil', 'rank'); }
+}
+function quill() {
+  if (!SND.on || !SND.ctx) return;
+  const C = SND.ctx, o = C.createBufferSource(), b = C.createBuffer(1, 1200, C.sampleRate), d = b.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length) * 0.25;
+  o.buffer = b; const f = C.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 2500; o.connect(f); f.connect(C.destination); o.start();
+}
+
+/* ---------- vue : la scène ---------- */
+function sealSVG(t) {
+  const cracks = t >= 34 ? 1 : 0, c2 = t >= 67 ? 1 : 0, open = t >= 100;
+  return '<svg class="seal' + (open ? ' open' : '') + '" viewBox="0 0 80 80" aria-hidden="true">' +
+    '<path d="M40 4c6 0 8 5 13 6s10-1 13 4-1 9 1 14 7 7 7 12-5 7-7 12 2 10-1 14-9 3-13 4-7 6-13 6-8-5-13-6-10 1-13-4 1-9-1-14-7-7-7-12 5-7 7-12-2-10 1-14 9-3 13-4 7-6 13-6z" class="wax"/>' +
+    '<circle cx="40" cy="40" r="22" class="wax2"/><path d="M40 26l4 9 9 1-7 6 2 9-8-5-8 5 2-9-7-6 9-1z" class="lys"/>' +
+    (cracks ? '<path d="M18 22l14 12-4 6" class="crack"/>' : '') + (c2 ? '<path d="M62 58l-12-9 3-7M58 18l-9 13" class="crack"/>' : '') + '</svg>';
+}
+function viewVoyage() {
+  const Y = ui.vy, sc = SCENES[Y.id], p = P[sc.who], V = vyState(), t = V.trust[Y.id] || 0;
+  const node = Y.node && sc.nodes[Y.node];
+  let h = '<button class="back" data-do="hub">‹ Acte ' + ROMAN[sc.act] + '</button>' +
+    '<section class="vy mood-' + (node ? node.mood : 'calme') + '" id="vy">' +
+    '<div class="vy-bg"><img src="' + esc(sc.bg.src) + '" alt="" referrerpolicy="no-referrer" onerror="this.remove()"></div><div class="vy-light"></div><div class="vy-candle"></div>' +
+    '<div class="vy-top"><span class="vy-date">' + esc(sc.date) + ' · ' + esc(sc.place) + '</span>' +
+    '<button class="vy-snd' + (SND.on ? ' on' : '') + '" data-do="vy-snd" aria-label="Ambiance sonore">' + (SND.on ? 'Son activé' : 'Ambiance sonore') + '</button></div>' +
+    '<div class="vy-who"><div class="vy-face' + (Y.speaking ? ' speak' : '') + '" style="background-image:url(\'' + esc(sc.face.src) + '\');background-position:' + sc.face.pos + ';background-size:' + sc.face.size + '"></div>' +
+    '<div><b>' + esc(p.n) + '</b><small>' + LEVELS_VY[Y.lv].n + '</small></div>' +
+    '<button class="vy-seal" data-do="vy-seal" aria-label="Sceau de confiance">' + sealSVG(t) + '<span>Confiance ' + t + '/100</span><i class="vy-gauge"><i style="width:' + t + '%"></i></i></button></div>';
+  if (!node) {
+    if (Y.phase === 'intro') {
+      h += '<div class="vy-box"><p class="narr tw" data-full="' + esc(sc.intro) + '"></p><div class="vy-opts" hidden><button class="btn" data-do="vy-go">S\'approcher</button></div></div>';
+    } else {
+      const e = V.journal.find(x => x.id === Y.entry);
+      h += '<div class="vy-box"><p class="narr">Tu quittes la salle. Ta plume court déjà sur le journal.</p>' +
+        '<div class="jpage ink"><p class="jhead">' + esc(sc.date) + ' · ' + esc(sc.place) + '</p>' + (e ? e.parts.map((x, k) => '<p style="animation-delay:' + (k * 0.6) + 's">' + esc(x) + '</p>').join('') : '') + '</div>' +
+        levelsHTML(Y.id) + '<div class="nav"><button class="btn ghost" data-do="vy-journal">Ouvrir le journal</button><button class="btn" data-do="hub">Retour au Chronoscope</button></div></div>';
+    }
+  } else {
+    h += '<div class="vy-box">' + (Y.reply ? '<div class="bubble me">' + esc(Y.reply.me) + '</div>' + (Y.reply.r ? '<div class="bubble them">' + esc(Y.reply.r) + '</div>' : '') : '') +
+      '<div class="bubble them tw" data-full="' + esc(node.say) + '"></div>' +
+      (node.fact ? '<div class="vy-fact ' + node.fact.k + '" hidden><b>' + (node.fact.k === 'fait' ? 'Fait établi' : 'Légende ou rumeur') + '</b> ' + esc(node.fact.t) + '</div>' : '') +
+      '<div class="vy-opts" hidden>' + node.opts.map((o, k) => '<button class="opt" data-do="vy-pick" data-k="' + k + '">' + esc(o.t) + '</button>').join('') + '</div></div>';
+  }
+  h += '<p class="vy-cred">Décor : ' + esc(sc.bg.cap) + ' (' + esc(sc.bg.lic) + ', <a href="' + sc.bg.page + '" target="_blank" rel="noopener">source</a>). Portrait : ' + esc(sc.face.cap) + ' (' + esc(sc.face.lic) + ', <a href="' + sc.face.page + '" target="_blank" rel="noopener">source</a>).</p></section>';
+  return h;
+}
+function levelsHTML(id) {
+  const V = vyState(), un = V.lv[id] || 0, dn = V.done[id] || {};
+  return '<div class="vy-levels"><p class="eyebrow">Niveaux d\'intimité · ' + V.ecus + ' écus</p>' + LEVELS_VY.map((L, i) => {
+    const open = i <= un, ok = dn[i];
+    return '<div class="vy-lv' + (open ? ' open' : '') + '"><span><b>' + L.n + '</b><small>' + L.d + '</small></span>' +
+      (open ? '<button class="btn sm' + (ok ? ' ghost' : '') + '" data-do="vy-start" data-id="' + id + '" data-l="' + i + '">' + (ok ? 'Rejouer' : 'Commencer') + '</button>'
+        : '<button class="btn sm ghost" data-do="vy-buy" data-id="' + id + '" data-l="' + i + '"' + (i > un + 1 ? ' disabled' : '') + '>' + L.cost + ' écus</button>') + '</div>';
+  }).join('') + '</div>';
+}
+function viewVoyageHome(id) {
+  const sc = SCENES[id], p = P[sc.who];
+  return '<button class="back" data-do="hub">‹ Acte ' + ROMAN[sc.act] + '</button><section class="hub"><p class="eyebrow">Voyage · ' + esc(sc.date) + '</p><h1>' + esc(p.n) + ' à Beaugency</h1>' +
+    '<p class="lead">Remonte le temps jusqu\'au jour où un mariage royal se défait. Chaque niveau d\'intimité ouvre une conversation plus profonde. Tes choix font monter ou baisser sa confiance, et chaque visite s\'écrit dans ton journal.</p>' +
+    '<p class="hint">Les écus se gagnent en jouant : la moitié de chaque gain d\'XP, en quiz, flashcards, duels et séries.</p></section>' + levelsHTML(id) +
+    '<div class="nav"><button class="btn ghost" data-do="vy-journal">Journal de bord</button></div>';
+}
+
+/* ---------- animations ---------- */
+const RM = () => window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let twTimer = null;
+function typewrite() {
+  clearTimeout(twTimer);
+  const el = $('#view .tw'); if (!el) return;
+  const full = el.getAttribute('data-full') || '', show = () => { const f = $('#view .vy-fact'); if (f) f.hidden = false; const o = $('#view .vy-opts'); if (o) o.hidden = false; if (ui.vy) { ui.vy.speaking = false; const fc = $('#view .vy-face'); if (fc) fc.classList.remove('speak'); } };
+  if (RM() || ui.vy.skip) { el.textContent = full; show(); return; }
+  let i = 0; el.textContent = '';
+  const fc = $('#view .vy-face'); if (fc) fc.classList.add('speak');
+  const step = () => {
+    if (!el.isConnected) return;
+    if (ui.vy.skip) { el.textContent = full; show(); return; }
+    el.textContent = full.slice(0, ++i);
+    if (i >= full.length) { show(); return; }
+    const c = full[i - 1];
+    if (i % 9 === 0) quill();
+    twTimer = setTimeout(step, c === '.' || c === '?' || c === '!' ? 320 : c === ',' || c === ':' || c === '…' ? 160 : 22);
+  };
+  step();
+}
+function teleport(year, done) {
+  if (RM()) { done(); return; }
+  const o = D.createElement('div'); o.className = 'tp';
+  o.innerHTML = '<svg class="tp-dial" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44"/><circle cx="50" cy="50" r="34"/>' +
+    Array.from({ length: 24 }, (_, k) => '<line x1="50" y1="8" x2="50" y2="' + (k % 2 ? 13 : 17) + '" transform="rotate(' + k * 15 + ' 50 50)"/>').join('') + '<line class="hand" x1="50" y1="50" x2="50" y2="20"/></svg><b class="tp-y">' + new Date().getFullYear() + '</b><small>Le Chronoscope remonte le temps</small>';
+  D.body.appendChild(o);
+  const y0 = new Date().getFullYear(), t0 = performance.now(), dur = 1700, yEl = o.querySelector('.tp-y');
+  const tick = now => {
+    const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+    yEl.textContent = Math.round(y0 + (year - y0) * e);
+    if (k < 1) requestAnimationFrame(tick); else { o.classList.add('flash'); setTimeout(() => { done(); }, 260); setTimeout(() => o.remove(), 900); }
+  };
+  requestAnimationFrame(tick);
+}
+function parallax() {
+  const vy = $('#vy'); if (!vy || RM() || vy.dataset.px) return; vy.dataset.px = 1;
+  const img = vy.querySelector('.vy-bg img');
+  vy.addEventListener('pointermove', e => { if (!img) return; const r = vy.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5; img.style.translate = (x * -14) + 'px ' + (y * -10) + 'px'; });
+}
+const _render = render;
+render = function (keep) { _render(keep); if (ui.tab === 'quest' && ui.step === 'voyage' && ui.vy && ui.vy.mode === 'scene') { parallax(); typewrite(); } };
+
+/* ---------- journal de bord ---------- */
+function viewJournal() {
+  const V = vyState(), J = ui.jr || (ui.jr = { i: 0, edit: false });
+  const list = V.journal.filter(e => e.parts.length).slice().sort((a, b) => a.visit - b.visit);
+  let h = '<button class="back" data-do="' + (ui.vy && ui.vy.id ? 'vy-home' : 'hub') + '">‹ Retour</button><h1 class="h1">Journal de bord du voyageur</h1>' +
+    '<p class="eyebrow">Classé par date de visite, avec tes allers et retours dans le temps</p>';
+  if (!list.length) return h + '<p class="empty">Ton journal est encore vierge. Pars en voyage et il s\'écrira tout seul.</p>';
+  J.i = clamp(J.i, 0, list.length - 1);
+  const e = list[J.i], prev = list[J.i - 1], sc = SCENES[e.scene];
+  let jump = '';
+  if (prev) { const d = e.year - prev.year; jump = d === 0 ? 'Même époque que ta visite précédente' : 'Saut de ' + Math.abs(d) + ' ans ' + (d < 0 ? 'en arrière' : 'en avant') + ' depuis ' + prev.year; }
+  else jump = 'Premier saut : de ' + new Date(e.visit).getFullYear() + ' à ' + e.year;
+  const when = new Date(e.visit).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  h += '<div class="book"><div class="jpage turn" id="jp"><div class="jtop"><span>Visite n° ' + (J.i + 1) + ' · ' + when + '</span><span class="jjump">' + esc(jump) + '</span></div>' +
+    '<p class="jhead">' + esc(sc ? sc.date : String(e.year)) + ' · ' + esc(e.place) + '</p>' +
+    (J.edit ? '<textarea id="jtext" rows="12" class="jedit">' + esc(e.text != null ? e.text : e.parts.join('\n\n')) + '</textarea>'
+      : (e.text != null ? e.text.split(/\n\s*\n/) : e.parts).map(x => '<p>' + esc(x) + '</p>').join('')) +
+    (e.notes && e.notes.length ? '<div class="jnotes">' + e.notes.map((n, k) => {
+      const has = (V.cards[e.act] || []).some(c => c.id === 'j:' + e.id + ':' + k);
+      return '<div class="jnote ' + n.k + '"><b>' + (n.k === 'fait' ? 'Fait établi' : 'Légende') + '</b> ' + esc(n.t) +
+        (n.q ? '<button class="lnk" data-do="j-card" data-e="' + e.id + '" data-k="' + k + '"' + (has ? ' disabled' : '') + '>' + (has ? 'Flashcard créée' : 'En faire une flashcard') + '</button>' : '') + '</div>';
+    }).join('') + '</div>' : '') + '</div></div>' +
+    '<div class="nav"><button class="btn ghost" data-do="j-turn" data-d="-1"' + (J.i ? '' : ' disabled') + '>‹ Page précédente</button>' +
+    (J.edit ? '<button class="btn" data-do="j-save" data-e="' + e.id + '">Enregistrer</button>' : '<button class="btn ghost" data-do="j-edit">Modifier</button>') +
+    '<button class="btn ghost" data-do="j-turn" data-d="1"' + (J.i < list.length - 1 ? '' : ' disabled') + '>Page suivante ›</button></div>' +
+    '<p class="hint">Page ' + (J.i + 1) + ' sur ' + list.length + '. Les flashcards créées rejoignent le paquet de l\'acte ' + ROMAN[e.act] + '.</p>';
+  return h;
+}
+
+/* ---------- actions ---------- */
+function vyBegin(id, lv) {
+  const V = vyState(), sc = SCENES[id];
+  const e = { id: Date.now().toString(36), scene: id, act: sc.act, who: sc.who, year: sc.year, place: sc.place, visit: Date.now(), parts: [], notes: [] };
+  V.journal.push(e);
+  ui.vy = { id: id, mode: 'scene', lv: lv, node: null, phase: 'intro', entry: e.id, reply: null, skip: false, speaking: true };
+  save();
+  teleport(sc.year, () => render());
+}
+Object.assign(DO, {
+  'vy-home': el => { const id = (el && el.getAttribute && el.getAttribute('data-id')) || (ui.vy && ui.vy.id) || 'beaugency'; ui.step = 'voyage'; ui.vy = { id: id, mode: 'home' }; render(); },
+  'vy-start': el => vyBegin(el.getAttribute('data-id'), +el.getAttribute('data-l')),
+  'vy-buy': el => {
+    const id = el.getAttribute('data-id'), l = +el.getAttribute('data-l'), V = vyState(), L = LEVELS_VY[l];
+    if ((V.lv[id] || 0) !== l - 1) return;
+    if (V.ecus < L.cost) { toast('Il te manque ' + (L.cost - V.ecus) + ' écus. Joue un quiz ou des flashcards !', 'rank'); return; }
+    V.ecus -= L.cost; V.lv[id] = l; save(); toast(L.n + ' débloqué', 'rank'); render(true);
+  },
+  'vy-go': () => { const Y = ui.vy, sc = SCENES[Y.id]; Y.node = sc.start[Y.lv]; Y.phase = 'talk'; Y.skip = false; Y.speaking = true; render(true); },
+  'vy-pick': el => {
+    const Y = ui.vy, sc = SCENES[Y.id], node = sc.nodes[Y.node], o = node.opts[+el.getAttribute('data-k')], V = vyState();
+    const e = V.journal.find(x => x.id === Y.entry);
+    const before = V.trust[Y.id] || 0, after = clamp(before + (o.tr || 0), 0, 100);
+    V.trust[Y.id] = after;
+    if (e) { if (o.j) e.parts.push(o.j); if (node.fact && !e.notes.some(n => n.t === node.fact.t)) e.notes.push(node.fact); }
+    [34, 67, 100].forEach((th, k) => { if (before < th && after >= th) setTimeout(() => openSheet('<h2>Le sceau se brise</h2>' + sealSVG(after) + '<p class="narr">' + esc(sc.seal[k]) + '</p><div class="nav"><button class="btn" data-do="close">Continuer</button></div>'), 400); if (e && before < th && after >= th) e.parts.push('Confidence : ' + sc.seal[k]); });
+    if (o.tr) toast((o.tr > 0 ? '+' : '') + o.tr + ' confiance', o.tr > 0 ? 'xp' : 'rank');
+    Y.reply = { me: o.t, r: o.r || '' }; Y.skip = false; Y.speaking = true;
+    if (o.go === 'end') {
+      Y.node = null; Y.phase = 'end';
+      const dn = V.done[Y.id] || (V.done[Y.id] = {});
+      if (!dn[Y.lv]) { dn[Y.lv] = 1; addXp(15 + 10 * Y.lv, 'voyage'); }
+      if (e && o.r) e.parts.push('Ses derniers mots : « ' + o.r + ' »');
+      quill();
+    } else Y.node = o.go;
+    save(); render(true);
+  },
+  'vy-seal': () => { const Y = ui.vy, sc = SCENES[Y.id], t = vyState().trust[Y.id] || 0, got = [34, 67, 100].filter(x => t >= x).length;
+    openSheet('<h2>Sceau de confiance</h2>' + sealSVG(t) + '<p class="hint">Confiance : ' + t + '/100. Le sceau se fend à 34, 67 et se brise à 100, révélant chaque fois une confidence.</p>' +
+      (got ? sc.seal.slice(0, got).map(s => '<p class="narr">' + esc(s) + '</p>').join('') : '<p class="empty">Aucune confidence pour l\'instant.</p>') + '<div class="nav"><button class="btn" data-do="close">Fermer</button></div>'); },
+  'vy-snd': () => { soundToggle(); render(true); },
+  'vy-journal': () => { ui.step = 'journal'; const V = vyState(); ui.jr = { i: Math.max(0, V.journal.filter(e => e.parts.length).length - 1), edit: false }; render(); },
+  'j-turn': el => { ui.jr.i += +el.getAttribute('data-d'); ui.jr.edit = false; render(true); const p = $('#jp'); if (p) p.classList.add(+el.getAttribute('data-d') > 0 ? 'fwd' : 'bwd'); },
+  'j-edit': () => { ui.jr.edit = true; render(true); },
+  'j-save': el => { const V = vyState(), e = V.journal.find(x => x.id === el.getAttribute('data-e')); if (e) { e.text = ($('#jtext').value || '').slice(0, 6000); save(); } ui.jr.edit = false; toast('Journal enregistré', 'xp'); render(true); },
+  'j-card': el => {
+    const V = vyState(), e = V.journal.find(x => x.id === el.getAttribute('data-e')), k = +el.getAttribute('data-k'), n = e && e.notes[k];
+    if (!n || !n.q) return;
+    const arr = V.cards[e.act] || (V.cards[e.act] = []), id = 'j:' + e.id + ':' + k;
+    if (!arr.some(c => c.id === id)) arr.push({ id: id, q: n.q, a: n.a });
+    save(); toast('Flashcard ajoutée à l\'acte ' + ROMAN[e.act], 'xp'); render(true);
+  }
+});
+D.addEventListener('click', e => { if (ui.vy && ui.vy.mode === 'scene' && e.target.closest && e.target.closest('.vy-box .tw')) { ui.vy.skip = true; } });
 
 /* ---------- démarrage ---------- */
 D.body.insertAdjacentHTML('afterbegin', SPRITE);
