@@ -2237,7 +2237,7 @@ QUIZ[11] = [
 ];
 }
 
-/* DONNEES 5 : actes XII à XV (1547 à 1789) */
+/* DONNEES 5 : actes XII à XVI (1547 à 1789) */
 {
 const fm = (par, sp, ch) => ({ par: par || [], sp: sp || [], ch: ch || [] });
 
@@ -2251,9 +2251,12 @@ ACTS.push(
   { id: 14, num: "XIV", title: "Le Roi-Soleil", short: "Louis XIV", a: 1661, b: 1715, sym: "sun",
     lead: "Soixante-douze ans de règne, un château, des guerres, des favorites et des perruques. L'Europe entière copie Versailles.",
     world: [["1666", "Grand incendie de Londres"], ["1683", "Les Ottomans échouent devant Vienne"], ["1688", "Glorieuse Révolution en Angleterre"]] },
-  { id: 15, num: "XV", title: "Les Lumières avant l'orage", short: "Louis XV et Louis XVI", a: 1715, b: 1789, sym: "quill",
-    lead: "Des philosophes brillants, des finances en ruine, un roi aimé puis détesté, une reine autrichienne. Tout le monde danse, le sol craque.",
-    world: [["1756", "Début de la guerre de Sept Ans"], ["1776", "Indépendance des États-Unis"], ["1783", "Premier vol en montgolfière"]] }
+  { id: 15, num: "XV", title: "Les Lumières et le Bien-Aimé", short: "Louis XV", a: 1715, b: 1774, sym: "quill",
+    lead: "Un régent qui fait la fête, un banquier écossais qui ruine Paris, des philosophes brillants et un roi aimé, puis détesté. Tout le monde danse, le sol craque.",
+    world: [["1740", "Frédéric II devient roi de Prusse"], ["1756", "Début de la guerre de Sept Ans"], ["1769", "James Watt perfectionne la machine à vapeur"]] },
+  { id: 16, num: "XVI", title: "Le dernier roi de l'Ancien Régime", short: "Louis XVI", a: 1774, b: 1789, sym: "crown",
+    lead: "Un roi de dix-neuf ans plein de bonne volonté, une reine autrichienne, une guerre américaine gagnée et des caisses vides. Quinze ans pour arriver au 5 mai 1789.",
+    world: [["1776", "Indépendance des États-Unis"], ["1783", "Premier vol en montgolfière"], ["1788", "Les Anglais fondent Sydney"]] }
 );
 
 PEOPLE.push(
@@ -2754,7 +2757,7 @@ PEOPLE.push(
     fam: fm() },
 
   { id: "louis16", n: "Louis XVI", g: "bourbon", lv: 5, sym: "lock", life: [1754, 1793], reign: [1774, 1792], rl: "roi", d: "1754 – 1793",
-    role: "Roi de France et de Navarre", act: 15,
+    role: "Roi de France et de Navarre", act: 16,
     q: "Petit-fils de Louis XV, roi en 1774, qui convoque les états généraux en 1789",
     one: "Un roi plein de bonne volonté, pris dans la tempête.",
     facts: [
@@ -2767,7 +2770,7 @@ PEOPLE.push(
     fam: fm(['Louis-Ferdinand, le dauphin', 'Marie-Josèphe de Saxe'], ['marieantoinette'], ['Marie-Thérèse', 'Louis-Joseph', 'Louis-Charles (Louis XVII)']) },
 
   { id: "marieantoinette", n: "Marie-Antoinette", g: "bourbon", lv: 4, sym: "ring", life: [1755, 1793], d: "1755 – 1793",
-    role: "Reine de France", act: 15,
+    role: "Reine de France", act: 16,
     q: "Archiduchesse autrichienne mariée au futur Louis XVI à quatorze ans",
     one: "La reine autrichienne, cible de toutes les rumeurs.",
     facts: [
@@ -2779,7 +2782,7 @@ PEOPLE.push(
     fam: fm(['François Ier du Saint-Empire', 'Marie-Thérèse d\'Autriche'], ['louis16'], ['Marie-Thérèse', 'Louis-Joseph', 'Louis-Charles (Louis XVII)']) },
 
   { id: "turgot", n: "Turgot", g: "cour", lv: 2, sym: "book", life: [1727, 1781], d: "1727 – 1781",
-    role: "Contrôleur général des finances", act: 15,
+    role: "Contrôleur général des finances", act: 16,
     q: "Ministre réformateur de Louis XVI, renvoyé en 1776",
     one: "Le réformateur renvoyé au bout de deux ans.",
     facts: [
@@ -2788,7 +2791,7 @@ PEOPLE.push(
     fam: fm() },
 
   { id: "necker", n: "Jacques Necker", g: "cour", lv: 3, sym: "book", life: [1732, 1804], d: "1732 – 1804",
-    role: "Banquier genevois, ministre des finances", act: 15,
+    role: "Banquier genevois, ministre des finances", act: 16,
     q: "Banquier protestant de Genève, ministre populaire de Louis XVI",
     one: "Le banquier qui publie les comptes du roi.",
     facts: [
@@ -2798,7 +2801,7 @@ PEOPLE.push(
     fam: fm() },
 
   { id: "lafayette", n: "La Fayette", g: "bourbon", lv: 2, sym: "sword", life: [1757, 1834], d: "1757 – 1834",
-    role: "Officier, héros de l'indépendance américaine", act: 15,
+    role: "Officier, héros de l'indépendance américaine", act: 16,
     q: "Jeune noble parti combattre pour l'indépendance américaine en 1777",
     one: "Le héros des deux mondes.",
     facts: [
@@ -2807,7 +2810,7 @@ PEOPLE.push(
     fam: fm() },
 
   { id: "franklin", n: "Benjamin Franklin", g: "monde", lv: 2, sym: "flame", life: [1706, 1790], d: "1706 – 1790",
-    role: "Diplomate américain à Paris", act: 15,
+    role: "Diplomate américain à Paris", act: 16,
     q: "Savant et diplomate américain qui obtient l'alliance française en 1778",
     one: "L'Américain qui séduit Paris avec un bonnet de fourrure.",
     facts: [
@@ -2873,19 +2876,23 @@ EVENTS.push(
   { id: "e1763", y: 1763, t: "Traité de Paris", d: "La France perd le Canada et presque toute l'Inde.", act: 15, nop: true },
   { id: "e1768", y: 1768, t: "La Corse devient française", d: "Cédée par Gênes.", act: 15, nop: true },
   { id: "e1770", y: 1770, t: "Mariage du dauphin et de Marie-Antoinette", d: "Le 16 mai, à Versailles.", act: 15, nop: true },
-  { id: "e1774", y: 1774, t: "Louis XVI devient roi", d: "À la mort de Louis XV, emporté par la variole.", act: 15, nop: true },
-  { id: "e1776", y: 1776, t: "Déclaration d'indépendance américaine", d: "Le 4 juillet.", act: 15, w: true, nop: true },
-  { id: "e1778", y: 1778, t: "Alliance avec les États-Unis", d: "La même année meurent Voltaire et Rousseau.", act: 15, nop: true },
-  { id: "e1783", y: 1783, t: "Traité de Versailles et premières montgolfières", d: "L'indépendance américaine est reconnue.", act: 15, nop: true },
-  { id: "e1785", y: 1785, t: "Affaire du collier de la reine", d: "Le cardinal de Rohan escroqué, la reine éclaboussée.", act: 15, nop: true },
-  { id: "e1787", y: 1787, t: "Assemblée des notables et édit de tolérance", d: "Les privilégiés refusent de payer. Les protestants retrouvent un état civil.", act: 15, nop: true },
-  { id: "e1789", y: 1789, t: "Ouverture des états généraux", d: "Le 5 mai 1789, à Versailles. La Révolution commence.", act: 15, nop: true }
+  { id: "e1774", y: 1774, t: "Louis XVI devient roi", d: "À la mort de Louis XV, emporté par la variole.", act: 16, nop: true },
+  { id: "e1776", y: 1776, t: "Déclaration d'indépendance américaine", d: "Le 4 juillet.", act: 16, w: true, nop: true },
+  { id: "e1778", y: 1778, t: "Alliance avec les États-Unis", d: "La même année meurent Voltaire et Rousseau.", act: 16, nop: true },
+  { id: "e1783", y: 1783, t: "Traité de Versailles et premières montgolfières", d: "L'indépendance américaine est reconnue.", act: 16, nop: true },
+  { id: "e1785", y: 1785, t: "Affaire du collier de la reine", d: "Le cardinal de Rohan escroqué, la reine éclaboussée.", act: 16, nop: true },
+  { id: "e1787", y: 1787, t: "Assemblée des notables et édit de tolérance", d: "Les privilégiés refusent de payer. Les protestants retrouvent un état civil.", act: 16, nop: true },
+  { id: "e1775", y: 1775, t: "Guerre des farines", d: "Émeutes contre la cherté du pain après la libération du commerce des grains par Turgot.", act: 16, nop: true },
+  { id: "e1781", y: 1781, t: "Compte rendu au roi", d: "Necker publie pour la première fois les comptes du royaume. Il est renvoyé la même année.", act: 16, nop: true },
+  { id: "e1788", y: 1788, t: "Journée des Tuiles et convocation des états généraux", d: "Émeute à Grenoble le 7 juin. Le 8 août, le roi convoque les états généraux pour 1789.", act: 16, nop: true },
+  { id: "e1789", y: 1789, t: "Ouverture des états généraux", d: "Le 5 mai 1789, à Versailles. La Révolution commence.", act: 16, nop: true }
 );
 
 FRISE[12] = ["e1559", "e1562", "e1572", "e1588", "e1589", "e1593", "e1598", "e1610"];
 FRISE[13] = ["e1614", "e1617", "e1628", "e1630", "e1635", "e1643", "e1648", "e1659"];
 FRISE[14] = ["e1661", "e1665", "e1673", "e1682", "e1685", "e1701", "e1709", "e1715"];
-FRISE[15] = ["e1720", "e1751", "e1757", "e1763", "e1770", "e1774", "e1785", "e1789"];
+FRISE[15] = ["e1720", "e1744", "e1748", "e1751", "e1757", "e1763", "e1768", "e1770"];
+FRISE[16] = ["e1774", "e1775", "e1778", "e1781", "e1783", "e1785", "e1788", "e1789"];
 
 MARR.push(
   ["henri2", "catherine", "1533. Une Médicis pour le second fils du roi, qui ne devait pas régner.", true],
@@ -2939,8 +2946,15 @@ STORY[15] = [
   { y: "1744", t: "Le Bien-Aimé", ppl: ["louis15", "pompadour"], p: "Louis XV, roi à cinq ans, est un homme intelligent qui s'ennuie au Conseil. En 1744, malade à Metz, il manque de mourir : tout le royaume prie, on le surnomme le Bien-Aimé. L'année suivante, il installe à Versailles une bourgeoise brillante, Jeanne Poisson, marquise de Pompadour. La noblesse s'étrangle. Les philosophes, eux, ont trouvé une protectrice." },
   { y: "1751", t: "Ranger le monde", ppl: ["diderot", "voltaire", "rousseau", "montesquieu"], p: "Montesquieu a publié De l'esprit des lois en 1748. En 1751 paraît le premier tome de l'Encyclopédie de Diderot et d'Alembert : tout le savoir du monde, artisanat compris, rangé par ordre alphabétique et passé au crible de la raison. Voltaire ironise sur tout, Rousseau rêve de volonté générale. On appelle ça les Lumières. Le pouvoir, lui, interdit puis tolère." },
   { y: "1763", t: "Des arpents de neige", ppl: ["louis15", "frederic2prusse", "voltaire"], p: "La guerre de Sept Ans (1756-1763) tourne mal. Frédéric II écrase les Français à Rossbach. Damiens blesse le roi d'un coup de canif. En 1763, le traité de Paris donne le Canada et l'Inde aux Anglais. Voltaire avait parlé de « quelques arpents de neige ». Le royaume gagne la Lorraine et la Corse, mais l'humiliation reste." },
-  { y: "1774", t: "Deux jeunes gens sur le trône", ppl: ["louis16", "marieantoinette", "turgot", "dubarry"], p: "Louis XV meurt de la variole en 1774, très impopulaire. Son petit-fils, Louis XVI, a dix-neuf ans, sa femme Marie-Antoinette dix-huit. Il veut bien faire, appelle Turgot, qui veut supprimer des privilèges. Les privilégiés obtiennent son renvoi en 1776. En 1778, la France aide les Américains à se libérer de l'Angleterre. Victoire coûteuse : la dette explose." },
-  { y: "1789", t: "Le 5 mai", ppl: ["louis16", "necker", "marieantoinette", "lafayette"], p: "En 1785, l'affaire du collier salit la reine, pourtant innocente. Les caisses sont vides, les privilégiés refusent de payer, les récoltes de 1788 sont mauvaises. Louis XVI convoque les états généraux, qui ne se sont pas réunis depuis 1614. Le 5 mai 1789, ils s'ouvrent à Versailles. Le Chronoscope se tait, vérifie sa batterie, et te prévient : la suite est un autre voyage." }
+  { y: "1774", t: "La fin du Bien-Aimé", ppl: ["louis15", "dubarry", "marieantoinette"], p: "En 1770, le petit-fils du roi épouse une archiduchesse autrichienne de quatorze ans, Marie-Antoinette. À Versailles règne la dernière favorite, Madame du Barry, que la jeune dauphine refuse de saluer : il faut une crise diplomatique pour qu'elle lui adresse enfin une phrase. En mai 1774, Louis XV meurt de la variole. Le peuple qui priait pour le Bien-Aimé en 1744 se moque du cortège funèbre. Le Chronoscope note : soixante ans de règne, et personne pour le pleurer." }
+];
+STORY[16] = [
+  { y: "1774", t: "Deux jeunes gens sur le trône", ppl: ["louis16", "marieantoinette", "turgot"], p: "Louis XVI a dix-neuf ans, Marie-Antoinette dix-huit. Il est timide, très cultivé, passionné de géographie, de chasse et de serrurerie. Il veut bien faire : il rappelle les parlements que son grand-père avait brisés et nomme un ministre réformateur, Turgot. Le Chronoscope soupire : bonne volonté et finances vides, c'est un mélange explosif." },
+  { y: "1775", t: "La guerre des farines", ppl: ["turgot", "louis16"], p: "Turgot libère le commerce des grains. Mauvaise récolte, le prix du pain s'envole : au printemps 1775, des émeutes éclatent jusqu'à Versailles, c'est la guerre des farines. En juin, Louis XVI est sacré à Reims. En 1776, Turgot veut supprimer la corvée et faire payer les privilégiés. Ils obtiennent son renvoi en mai. Fin des grandes réformes." },
+  { y: "1778", t: "L'Amérique", ppl: ["franklin", "lafayette", "louis16"], p: "Benjamin Franklin, bonnet de fourrure et manières simples, fait fondre les salons parisiens. En 1777, le jeune La Fayette part combattre en Amérique malgré l'interdiction du roi. En 1778, la France s'allie aux insurgés contre l'Angleterre. Victoire à Yorktown en 1781, paix de Versailles en 1783 : l'Angleterre est humiliée, mais la dette française a explosé." },
+  { y: "1781", t: "Les comptes du roi", ppl: ["necker", "louis16"], p: "Le banquier genevois Necker finance la guerre par des emprunts plutôt que par l'impôt. En 1781, il publie le Compte rendu au roi : pour la première fois, les Français lisent les recettes et les dépenses de l'État, et découvrent les pensions des courtisans. Scandale à la cour, succès dans le public. Il est renvoyé la même année." },
+  { y: "1785", t: "Le collier", ppl: ["marieantoinette"], p: "En 1783, les frères Montgolfier font voler leurs ballons, et Paris lève les yeux au ciel. En 1785, une aventurière, Jeanne de La Motte, fait croire au cardinal de Rohan qu'il achète un collier de diamants pour la reine. Escroquerie complète. La reine est innocente, mais le cardinal est acquitté en 1786 : l'opinion conclut qu'elle est coupable de quelque chose." },
+  { y: "1789", t: "Le 5 mai", ppl: ["louis16", "necker", "marieantoinette", "lafayette"], p: "En 1787, l'assemblée des notables refuse de payer. Le roi accorde un état civil aux protestants par l'édit de tolérance. En juin 1788, Grenoble se soulève : les habitants lancent des tuiles sur les soldats. En août, Louis XVI rappelle Necker et convoque les états généraux, qui n'ont pas siégé depuis 1614. Le 5 mai 1789, ils s'ouvrent à Versailles. Le Chronoscope se tait, vérifie sa batterie, et te prévient : la suite est un autre voyage." }
 ];
 
 TALK[12] = { who: "henri4", place: "Saint-Denis, juillet 1593",
@@ -2960,7 +2974,7 @@ TALK[12] = { who: "henri4", place: "Saint-Denis, juillet 1593",
   outro: "Henri te tape sur l'épaule à t'en déboîter le bras. Le Chronoscope : « Il a survécu à une bonne dizaine d'attentats. Le dernier l'attend dans dix-sept ans. »" };
 
 TALK[13] = { who: "richelieu", place: "Devant La Rochelle, 1628",
-  intro: "Sur une digue battue par le vent, un homme maigre en cuirasse sur sa robe rouge observe la ville assiégée. Il a un chat dans les bras. Il te dévisage longuement. « Vous n'êtes pas espionne de la reine mère, j'espère. »",
+  intro: "Sur une digue battue par le vent, un homme maigre en cuirasse sur sa robe rouge observe la ville assiégée. Il a un chat dans les bras. Il te dévisage longuement. « Vous n'êtes pas {espion|espionne} de la reine mère, j'espère. »",
   beats: [
     { say: "La Rochelle attend la flotte anglaise. Comment empêcher les Anglais de ravitailler la ville ?",
       learn: "Richelieu fait construire une digue de plus d'un kilomètre et demi pour fermer la rade. La flotte anglaise ne peut passer. La ville, affamée, se rend en octobre 1628.",
@@ -2996,8 +3010,29 @@ TALK[14] = { who: "louis14", place: "Versailles, 1682",
   ],
   outro: "Le roi s'éloigne vers la chapelle, suivi par trois cents perruques. Le Chronoscope chuchote : « Il ne t'a pas répondu. C'est déjà un honneur immense. »" };
 
-TALK[15] = { who: "marieantoinette", place: "Petit Trianon, été 1785",
-  intro: "Une jeune femme en robe de mousseline blanche, chapeau de paille, cueille des fleurs dans un faux village. Elle a trente ans, rit facilement, et te prend pour une dame de compagnie de la princesse de Lamballe.",
+TALK[15] = { who: "pompadour", place: "Versailles, décembre 1757",
+  intro: "Dans un petit salon tendu de soie bleue, une femme élégante d'une trentaine d'années range des dessins de porcelaine. Elle lève les yeux vers toi, pas surprise le moins du monde. « Encore un visiteur que personne n'a annoncé. Asseyez-vous, la journée a été longue. »",
+  beats: [
+    { say: "En janvier, un certain Damiens a frappé le roi d'un coup de canif devant tout Versailles. Une égratignure. Pourtant le royaume tremble. Que va-t-on faire de cet homme ?",
+      learn: "Le 5 janvier 1757, Robert François Damiens blesse légèrement Louis XV d'un coup de canif. Il est écartelé en place de Grève le 28 mars 1757, la dernière exécution de ce genre en France.",
+      opts: [{ t: "Il sera écartelé en place de Grève, un supplice d'un autre âge.", r: "Vous avez deviné. Les philosophes en seront horrifiés, et ils auront raison.", x: 10 },
+        { t: "Le roi lui pardonnera.", r: "Le roi pardonne beaucoup aux femmes, très peu aux régicides.", x: 3 },
+        { t: "On l'enverra aux galères.", r: "Pour avoir touché au roi ? Vous êtes bien indulgente.", x: 3 }] },
+    { say: "Les dévots veulent faire interdire l'Encyclopédie de M. Diderot. Moi, je la trouve utile : on y apprend comment se fabriquent la soie ou la poudre. Dois-je la défendre ?",
+      learn: "Madame de Pompadour protège les philosophes. Quand le privilège de l'Encyclopédie est révoqué en 1759, le directeur de la Librairie, Malesherbes, aide en secret à sauver les manuscrits. Les volumes continuent de paraître et l'ouvrage est achevé en 1772.",
+      opts: [{ t: "Oui, et discrètement : l'Encyclopédie finira malgré les interdictions.", r: "Discrètement, c'est le mot. À la cour, on ne gagne rien en criant.", x: 10 },
+        { t: "Non, laissez les dévots la brûler.", r: "Brûler des livres ? Je préfère encore la porcelaine.", x: 3 },
+        { t: "Demandez au pape de trancher.", r: "Le pape n'a pas lu une ligne de M. Diderot. Moi, si.", x: 3 }] },
+    { say: "L'an dernier, nous nous sommes alliés à l'Autriche, notre ennemie de toujours. Et le mois dernier, le roi de Prusse a écrasé notre armée à Rossbach. Qu'en dites-vous ?",
+      learn: "Le renversement des alliances de 1756 unit la France à l'Autriche. La guerre de Sept Ans tourne mal : défaite de Rossbach le 5 novembre 1757 face à Frédéric II, puis perte du Canada et de l'Inde au traité de Paris en 1763. La phrase « Après nous, le déluge » est attribuée à la marquise ou au roi, sans certitude.",
+      opts: [{ t: "Que la guerre va mal finir, et coûter le Canada.", r: "Le Canada ? Quelques arpents de neige, dit M. de Voltaire. Je crains qu'il ne se trompe. Après nous, le déluge…", x: 10 },
+        { t: "Que la Prusse sera vite battue.", r: "Frédéric écrit des vers et gagne des batailles. C'est très agaçant.", x: 3 },
+        { t: "Qu'il faut s'allier à l'Angleterre.", r: "C'est contre elle que nous nous battons sur toutes les mers.", x: 3 }] }
+  ],
+  outro: "La marquise retourne à ses dessins de Sèvres. Le Chronoscope murmure : « Elle mourra en 1764, à quarante-deux ans. Le roi regardera passer son cortège sous la pluie. »" };
+
+TALK[16] = { who: "marieantoinette", place: "Petit Trianon, été 1785",
+  intro: "Une jeune femme en robe de mousseline blanche, chapeau de paille, cueille des fleurs dans un faux village. Elle a trente ans, rit facilement, et te prend pour {un page|une dame de compagnie} de la princesse de Lamballe.",
   beats: [
     { say: "On me raconte que les Parisiens me reprochent une phrase sur la brioche. Je ne m'en souviens pas du tout. L'ai-je vraiment dite ?",
       learn: "La phrase « Qu'ils mangent de la brioche » apparaît chez Rousseau, qui l'attribue à « une grande princesse » dans ses Confessions, écrites avant l'arrivée de Marie-Antoinette en France. Elle ne l'a jamais prononcée.",
@@ -3052,9 +3087,24 @@ QUIZ[15] = [
   { q: "Que perd la France au traité de Paris de 1763 ?", o: ["Le Canada et presque toute l'Inde", "L'Alsace", "La Corse", "La Louisiane seulement"], c: 0, x: "À la fin de la guerre de Sept Ans." },
   { q: "Quel philosophe défend la mémoire de Jean Calas ?", o: ["Voltaire", "Rousseau", "Montesquieu", "Diderot"], c: 0, x: "Il obtient sa réhabilitation en 1765." },
   { q: "Qui théorise la séparation des pouvoirs en 1748 ?", o: ["Montesquieu", "Rousseau", "Voltaire", "Turgot"], c: 0, x: "Dans De l'esprit des lois." },
+  { q: "Où Louis XV tombe-t-il gravement malade en 1744 ?", o: ["À Metz", "À Versailles", "À Fontenoy", "À Reims"], c: 0, x: "Le royaume prie pour lui : on le surnomme le Bien-Aimé." },
+  { q: "Qui blesse Louis XV d'un coup de canif en 1757 ?", o: ["Damiens", "Ravaillac", "Jacques Clément", "Cartouche"], c: 0, x: "Il est écartelé en place de Grève la même année." },
+  { q: "Quelle île devient française en 1768 ?", o: ["La Corse", "La Sardaigne", "Minorque", "La Martinique"], c: 0, x: "Gênes la cède à la France." },
+  { q: "Quelle favorite de Louis XV protège Voltaire et l'Encyclopédie ?", o: ["Madame de Pompadour", "Madame du Barry", "Madame de Maintenon", "Madame de Montespan"], c: 0, x: "Jeanne-Antoinette Poisson, favorite à partir de 1745." },
+  { q: "De quoi meurt Louis XV en 1774 ?", o: ["De la variole", "D'un attentat", "De la peste", "D'une chute de cheval"], c: 0, x: "Il meurt très impopulaire, en mai 1774." }
+];
+QUIZ[16] = [
   { q: "En quelle année Louis XVI épouse-t-il Marie-Antoinette ?", o: ["1770", "1774", "1785", "1755"], c: 0, x: "Le 16 mai 1770, à Versailles." },
   { q: "Qui a vraiment écrit l'anecdote « qu'ils mangent de la brioche » ?", o: ["Rousseau, à propos d'une autre princesse", "Marie-Antoinette dans une lettre", "Voltaire dans Candide", "Louis XVI"], c: 0, x: "Dans ses Confessions, avant l'arrivée de la reine." },
-  { q: "Quand s'ouvrent les états généraux ?", o: ["Le 5 mai 1789", "Le 14 juillet 1789", "Le 21 janvier 1793", "Le 4 août 1789"], c: 0, x: "Ils ne s'étaient pas réunis depuis 1614." }
+  { q: "Quand s'ouvrent les états généraux ?", o: ["Le 5 mai 1789", "Le 14 juillet 1789", "Le 21 janvier 1793", "Le 4 août 1789"], c: 0, x: "Ils ne s'étaient pas réunis depuis 1614." },
+  { q: "Comment s'appellent les émeutes de 1775 contre la cherté du pain ?", o: ["La guerre des farines", "La Fronde", "La journée des Dupes", "La Jacquerie"], c: 0, x: "Après la libération du commerce des grains par Turgot." },
+  { q: "Quel ministre réformateur est renvoyé en 1776 ?", o: ["Turgot", "Necker", "Calonne", "Colbert"], c: 0, x: "Les privilégiés obtiennent son départ." },
+  { q: "Quel jeune noble part combattre en Amérique en 1777 ?", o: ["La Fayette", "Rochambeau", "Mirabeau", "Talleyrand"], c: 0, x: "Malgré l'interdiction du roi, à dix-neuf ans." },
+  { q: "Quel Américain négocie l'alliance française de 1778 ?", o: ["Benjamin Franklin", "George Washington", "Thomas Jefferson", "John Adams"], c: 0, x: "Il fascine les salons parisiens avec son bonnet de fourrure." },
+  { q: "Que publie Necker en 1781 ?", o: ["Le Compte rendu au roi", "L'Encyclopédie", "Le Contrat social", "Les Cahiers de doléances"], c: 0, x: "Pour la première fois, les comptes de l'État sont rendus publics." },
+  { q: "Quelle escroquerie éclabousse la reine en 1785 ?", o: ["L'affaire du collier", "L'affaire des poisons", "L'affaire Calas", "Le système de Law"], c: 0, x: "Le cardinal de Rohan est dupé par Jeanne de La Motte." },
+  { q: "Dans quelle ville a lieu la journée des Tuiles en 1788 ?", o: ["Grenoble", "Paris", "Lyon", "Rennes"], c: 0, x: "Les habitants lancent des tuiles sur les soldats." },
+  { q: "Que rend l'édit de tolérance de 1787 aux protestants ?", o: ["Un état civil", "Leurs places fortes", "Le droit de devenir roi", "L'édit de Nantes en entier"], c: 0, x: "Ils peuvent à nouveau se marier légalement et déclarer leurs enfants." }
 ];
 }
 
@@ -3278,28 +3328,29 @@ function actSteps(a) {
 
 /* ---------- badges ---------- */
 const BADGES = [
-  { id: 'b_a1', n: 'Baptisée', d: "Terminer l'acte I", t: () => isDone(1) },
-  { id: 'b_a2', n: 'Reine du partage', d: "Terminer l'acte II", t: () => isDone(2) },
+  { id: 'b_a1', n: '{Baptisé|Baptisée}', d: "Terminer l'acte I", t: () => isDone(1) },
+  { id: 'b_a2', n: '{Roi|Reine} du partage', d: "Terminer l'acte II", t: () => isDone(2) },
   { id: 'b_a3', n: 'Maire du palais', d: "Terminer l'acte III", t: () => isDone(3) },
   { id: 'b_a4', n: 'Marteau', d: "Terminer l'acte IV", t: () => isDone(4) },
-  { id: 'b_a5', n: 'Impératrice', d: "Terminer l'acte V", t: () => isDone(5) },
-  { id: 'b_a6', n: 'Viking repentie', d: "Terminer l'acte VI", t: () => isDone(6) },
-  { id: 'b_a7', n: 'Capétienne', d: "Terminer l'acte VII", t: () => isDone(7) },
-  { id: 'b_a8', n: 'Croisée', d: "Terminer l'acte VIII", t: () => isDone(8) },
-  { id: 'b_a9', n: 'Templière', d: "Terminer l'acte IX", t: () => isDone(9) },
-  { id: 'b_a10', n: 'Pucelle', d: "Terminer l'acte X", t: () => isDone(10) },
-  { id: 'b_a11', n: 'Renaissante', d: "Terminer l'acte XI", t: () => isDone(11) },
-  { id: 'b_a12', n: 'Ni ligueuse ni huguenote', d: "Terminer l'acte XII", t: () => isDone(12) },
+  { id: 'b_a5', n: '{Empereur|Impératrice}', d: "Terminer l'acte V", t: () => isDone(5) },
+  { id: 'b_a6', n: '{Viking repenti|Viking repentie}', d: "Terminer l'acte VI", t: () => isDone(6) },
+  { id: 'b_a7', n: '{Capétien|Capétienne}', d: "Terminer l'acte VII", t: () => isDone(7) },
+  { id: 'b_a8', n: '{Croisé|Croisée}', d: "Terminer l'acte VIII", t: () => isDone(8) },
+  { id: 'b_a9', n: '{Templier|Templière}', d: "Terminer l'acte IX", t: () => isDone(9) },
+  { id: 'b_a10', n: '{Bâtard d\'Orléans|Pucelle}', d: "Terminer l'acte X", t: () => isDone(10) },
+  { id: 'b_a11', n: '{Renaissant|Renaissante}', d: "Terminer l'acte XI", t: () => isDone(11) },
+  { id: 'b_a12', n: '{Ni ligueur ni huguenot|Ni ligueuse ni huguenote}', d: "Terminer l'acte XII", t: () => isDone(12) },
   { id: 'b_a13', n: 'Éminence grise', d: "Terminer l'acte XIII", t: () => isDone(13) },
-  { id: 'b_a14', n: 'Reine-Soleil', d: "Terminer l'acte XIV", t: () => isDone(14) },
-  { id: 'b_a15', n: 'Éclairée', d: "Terminer l'acte XV, de Clovis à 1789", t: () => isDone(15) },
+  { id: 'b_a14', n: '{Roi-Soleil|Reine-Soleil}', d: "Terminer l'acte XIV", t: () => isDone(14) },
+  { id: 'b_a15', n: '{Éclairé|Éclairée}', d: "Terminer l'acte XV", t: () => isDone(15) },
+  { id: 'b_a16', n: 'États généraux', d: "Terminer l'acte XVI, de Clovis à 1789", t: () => isDone(16) },
   { id: 'b_perf', n: 'Sans faute', d: 'Réussir un quiz avec 10 sur 10', t: () => Object.keys(S.acts).some(k => S.acts[k].quiz >= 10) },
   { id: 'b_fr', n: 'Frise parfaite', d: 'Remettre une frise dans le bon ordre', t: () => Object.keys(S.acts).some(k => S.acts[k].frise >= 8) },
   { id: 'b_s3', n: 'Trois jours de suite', d: 'Série de 3 jours', t: () => S.streak.n >= 3 },
   { id: 'b_s7', n: 'Une semaine', d: 'Série de 7 jours', t: () => S.streak.n >= 7 },
-  { id: 'b_col', n: 'Collectionneuse', d: 'Lire 25 fiches', t: () => Object.keys(S.seen).length >= 25 },
+  { id: 'b_col', n: '{Collectionneur|Collectionneuse}', d: 'Lire 25 fiches', t: () => Object.keys(S.seen).length >= 25 },
   { id: 'b_pap', n: 'Papiste', d: 'Lire toutes les fiches de papes', t: () => PEOPLE.filter(p => p.pope).every(p => S.seen[p.id]) },
-  { id: 'b_time', n: 'Contemporaine', d: 'Explorer 15 années dans le Chronoscope', t: () => Object.keys(S.stats.yrs).length >= 15 },
+  { id: 'b_time', n: '{Contemporain|Contemporaine}', d: 'Explorer 15 années dans le Chronoscope', t: () => Object.keys(S.stats.yrs).length >= 15 },
   { id: 'b_rev', n: 'Révisionniste', d: 'Réviser 50 cartes', t: () => S.stats.reviews >= 50 },
   { id: 'b_ele', n: 'Un éléphant, ça trompe énormément', d: "Ouvrir la fiche d'Abul-Abbas", t: () => !!S.seen.abulabbas }
 ];
@@ -3308,7 +3359,7 @@ function checkBadges() {
     if (!S.badges[b.id] && b.t()) {
       S.badges[b.id] = Date.now();
       S.xp += 10; S.day.xp += 10;
-      toast('Badge : ' + b.n + ' (+10 XP)', 'badge');
+      toast('Badge : ' + gx(b.n) + ' (+10 XP)', 'badge');
     }
   });
 }
@@ -3401,7 +3452,7 @@ function bannerSVG(a) {
     '<path d="M0 124 Q90 110 180 122 T360 119 V140 H0 Z" fill="rgba(0,0,0,.5)"/>' + m + '</svg>';
 }
 
-const BANNERS = [["https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Master_of_Saint_Giles%2C_The_Baptism_of_Clovis%2C_c._1500%2C_NGA_41597.jpg/960px-Master_of_Saint_Giles%2C_The_Baptism_of_Clovis%2C_c._1500%2C_NGA_41597.jpg", "Le Baptême de Clovis, Maître de Saint-Gilles, vers 1500", "50% 30%"], ["https://upload.wikimedia.org/wikipedia/commons/5/5c/Chilp%C3%A9ric_et_Fr%C3%A9d%C3%A9gonde_%C3%A0_cheval.jpg", "Chilpéric et Frédégonde à cheval, miniature des Grandes Chroniques de France", "50% 45%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Dagobert_visitant_le_chantier_de_la_construction_de_Saint-Denis.jpg/960px-Dagobert_visitant_le_chantier_de_la_construction_de_Saint-Denis.jpg", "Dagobert visite le chantier de Saint-Denis, Robinet Testard, XVe siècle", "50% 40%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Steuben_-_Bataille_de_Poitiers.png/960px-Steuben_-_Bataille_de_Poitiers.png", "La Bataille de Poitiers, Charles de Steuben, 1837", "50% 40%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Sacre_de_Charlemagne.jpg/960px-Sacre_de_Charlemagne.jpg", "Le Sacre de Charlemagne, Jean Fouquet, vers 1455-1460", "50% 40%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Si%C3%A8ge_de_Paris_par_les_Normands%2C_l%27an_885%2C_G.30880.jpg/960px-Si%C3%A8ge_de_Paris_par_les_Normands%2C_l%27an_885%2C_G.30880.jpg", "Le Siège de Paris par les Normands en 885, gravure de Louis-Henri Brévière", "50% 50%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/The_crowning_of_Louis_VI_in_Orl%C3%A9ans.jpg/960px-The_crowning_of_Louis_VI_in_Orl%C3%A9ans.jpg", "Le Sacre de Louis VI à Orléans, Jean Fouquet, vers 1455-1460", "50% 45%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Bataille_de_Bouvines_gagnee_par_Philippe_Auguste.jpg/960px-Bataille_de_Bouvines_gagnee_par_Philippe_Auguste.jpg", "La Bataille de Bouvines, Horace Vernet, 1827", "50% 40%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Philip_iv_and_family._2.jpg/960px-Philip_iv_and_family._2.jpg", "Philippe le Bel et sa famille, miniature du XIVe siècle", "50% 30%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Battle_of_crecy_froissart.jpg/960px-Battle_of_crecy_froissart.jpg", "La Bataille de Crécy, Chroniques de Froissart, Loyset Liédet, XVe siècle", "50% 45%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/The_Field_of_the_Cloth_of_Gold.jpg/960px-The_Field_of_the_Cloth_of_Gold.jpg", "Le Camp du Drap d'or, vers 1545, Royal Collection", "50% 45%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Fran%C3%A7ois_Dubois_-_Le_massacre_de_la_Saint-Barth%C3%A9lemy_-_729_-DUBOIS_num4000_nr.jpg/960px-Fran%C3%A7ois_Dubois_-_Le_massacre_de_la_Saint-Barth%C3%A9lemy_-_729_-DUBOIS_num4000_nr.jpg", "Le Massacre de la Saint-Barthélemy, François Dubois, vers 1572-1584", "50% 50%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Siege_of_La_Rochelle_1881_Henri_Motte_1846_1922.jpg/960px-Siege_of_La_Rochelle_1881_Henri_Motte_1846_1922.jpg", "Richelieu au siège de La Rochelle, Henri Motte, 1881", "50% 45%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Chateau_de_Versailles_1668_Pierre_Patel.jpg/960px-Chateau_de_Versailles_1668_Pierre_Patel.jpg", "Le Château de Versailles en 1668, Pierre Patel", "50% 55%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Salon_de_Madame_Geoffrin.jpg/960px-Salon_de_Madame_Geoffrin.jpg", "Le Salon de Madame Geoffrin en 1755, Lemonnier, 1812", "50% 45%"]];
+const BANNERS = [["https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Master_of_Saint_Giles%2C_The_Baptism_of_Clovis%2C_c._1500%2C_NGA_41597.jpg/960px-Master_of_Saint_Giles%2C_The_Baptism_of_Clovis%2C_c._1500%2C_NGA_41597.jpg", "Le Baptême de Clovis, Maître de Saint-Gilles, vers 1500", "50% 30%"], ["https://upload.wikimedia.org/wikipedia/commons/5/5c/Chilp%C3%A9ric_et_Fr%C3%A9d%C3%A9gonde_%C3%A0_cheval.jpg", "Chilpéric et Frédégonde à cheval, miniature des Grandes Chroniques de France", "50% 45%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Dagobert_visitant_le_chantier_de_la_construction_de_Saint-Denis.jpg/960px-Dagobert_visitant_le_chantier_de_la_construction_de_Saint-Denis.jpg", "Dagobert visite le chantier de Saint-Denis, Robinet Testard, XVe siècle", "50% 40%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Steuben_-_Bataille_de_Poitiers.png/960px-Steuben_-_Bataille_de_Poitiers.png", "La Bataille de Poitiers, Charles de Steuben, 1837", "50% 40%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Sacre_de_Charlemagne.jpg/960px-Sacre_de_Charlemagne.jpg", "Le Sacre de Charlemagne, Jean Fouquet, vers 1455-1460", "50% 40%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Si%C3%A8ge_de_Paris_par_les_Normands%2C_l%27an_885%2C_G.30880.jpg/960px-Si%C3%A8ge_de_Paris_par_les_Normands%2C_l%27an_885%2C_G.30880.jpg", "Le Siège de Paris par les Normands en 885, gravure de Louis-Henri Brévière", "50% 50%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/The_crowning_of_Louis_VI_in_Orl%C3%A9ans.jpg/960px-The_crowning_of_Louis_VI_in_Orl%C3%A9ans.jpg", "Le Sacre de Louis VI à Orléans, Jean Fouquet, vers 1455-1460", "50% 45%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Bataille_de_Bouvines_gagnee_par_Philippe_Auguste.jpg/960px-Bataille_de_Bouvines_gagnee_par_Philippe_Auguste.jpg", "La Bataille de Bouvines, Horace Vernet, 1827", "50% 40%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Philip_iv_and_family._2.jpg/960px-Philip_iv_and_family._2.jpg", "Philippe le Bel et sa famille, miniature du XIVe siècle", "50% 30%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Battle_of_crecy_froissart.jpg/960px-Battle_of_crecy_froissart.jpg", "La Bataille de Crécy, Chroniques de Froissart, Loyset Liédet, XVe siècle", "50% 45%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/The_Field_of_the_Cloth_of_Gold.jpg/960px-The_Field_of_the_Cloth_of_Gold.jpg", "Le Camp du Drap d'or, vers 1545, Royal Collection", "50% 45%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Fran%C3%A7ois_Dubois_-_Le_massacre_de_la_Saint-Barth%C3%A9lemy_-_729_-DUBOIS_num4000_nr.jpg/960px-Fran%C3%A7ois_Dubois_-_Le_massacre_de_la_Saint-Barth%C3%A9lemy_-_729_-DUBOIS_num4000_nr.jpg", "Le Massacre de la Saint-Barthélemy, François Dubois, vers 1572-1584", "50% 50%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Siege_of_La_Rochelle_1881_Henri_Motte_1846_1922.jpg/960px-Siege_of_La_Rochelle_1881_Henri_Motte_1846_1922.jpg", "Richelieu au siège de La Rochelle, Henri Motte, 1881", "50% 45%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Chateau_de_Versailles_1668_Pierre_Patel.jpg/960px-Chateau_de_Versailles_1668_Pierre_Patel.jpg", "Le Château de Versailles en 1668, Pierre Patel", "50% 55%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Salon_de_Madame_Geoffrin.jpg/960px-Salon_de_Madame_Geoffrin.jpg", "Le Salon de Madame Geoffrin en 1755, Lemonnier, 1812", "50% 45%"], ["https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Ouverture_des_Etats_G%C3%A9n%C3%A9raux%2C_le_5_mai_1789%2C_par_Louis-Charles_Auguste_Couder._Paris_Mus%C3%A9es_20231031152637.jpg/960px-Ouverture_des_Etats_G%C3%A9n%C3%A9raux%2C_le_5_mai_1789%2C_par_Louis-Charles_Auguste_Couder._Paris_Mus%C3%A9es_20231031152637.jpg", "L'Ouverture des états généraux, le 5 mai 1789, Auguste Couder, 1839", "50% 50%"]];
 BANNERS.forEach(b => { const i = new Image(); i.src = b[0]; });
 function banner(a, cap) {
   const b = BANNERS[a - 1];
@@ -3628,7 +3679,7 @@ const CHAPTERS = [
   { n: 'I', t: 'Les Francs', s: 'De Clovis à Charlemagne', a: 1, b: 5 },
   { n: 'II', t: 'Le temps des Capétiens', s: 'De Louis le Pieux à Charles IV', a: 6, b: 9 },
   { n: 'III', t: 'Guerres et Renaissance', s: 'Des Valois à Henri IV', a: 10, b: 12 },
-  { n: 'IV', t: 'La monarchie absolue', s: 'De Louis XIII à 1789', a: 13, b: 15 }
+  { n: 'IV', t: 'La monarchie absolue', s: 'De Louis XIII à 1789', a: 13, b: 16 }
 ];
 function chip(x) {
   if (P[x]) return '<button class="chip g-' + P[x].g + '" data-do="person" data-id="' + x + '">' + esc(P[x].n) + '</button>';
@@ -3673,7 +3724,7 @@ function viewQuest() {
 }
 function viewActs() {
   const mx = unlockedMax();
-  let h = '<section class="intro"><p class="eyebrow">481 à 1789 · quinze actes</p><h1>De Clovis à Louis XVI</h1>' +
+  let h = '<section class="intro"><p class="eyebrow">481 à 1789 · seize actes</p><h1>De Clovis à Louis XVI</h1>' +
     '<p class="quip">« ' + esc(ui.quip) + ' »<br><span>Le Chronoscope</span></p></section><div class="acts">';
   ACTS.forEach(a => {
     const ch = CHAPTERS.find(c => c.a === a.id);
@@ -3700,7 +3751,7 @@ function viewHub() {
     ['quiz', 'Le quiz', s.quiz >= 0 ? 'Meilleur score : ' + s.quiz + '/10 (7 requis)' : '10 questions, 7 bonnes réponses requises', st[3], 'Jouer'],
     ['frise', 'La frise', s.frise >= 0 ? 'Meilleur score : ' + s.frise + '/8' : 'Remets 8 événements dans l\'ordre', st[4], 'Jouer']
   ];
-  let h = '<button class="back" data-do="back">‹ Les actes</button><section class="hub"><div class="hub-ban">' + banner(a.id) + '</div>' + '<small class="bn-cap">' + esc(BANNERS[a.id - 1][1]) + ', domaine public (Wikimedia Commons)</small>' +
+  let h = '<button class="back" data-do="back">‹ Les actes</button><section class="hub"><div class="hub-ban">' + banner(a.id) + '</div>' + (BANNERS[a.id - 1] ? '<small class="bn-cap">' + esc(BANNERS[a.id - 1][1]) + ', domaine public (Wikimedia Commons)</small>' : '') +
     '<p class="eyebrow">Acte ' + a.num + ' · ' + a.a + ' à ' + a.b + '</p><h1>' + esc(a.title) + '</h1><p class="lead">' + esc(a.lead) + '</p>' +
     '<div class="wl">' + a.world.map(w => '<span><b>' + esc(w[0]) + '</b> ' + esc(w[1]) + '</span>').join('') + '</div></section><ol class="steps">';
   rows.forEach((r, i) => {
@@ -4127,7 +4178,14 @@ function syncFrise() { const F = ui.fr; if (!F) return; F.order = $$('#frl .fr-i
 
 /* ---------- actions ---------- */
 const DO = {
-  tab: el => { ui.tab = el.getAttribute('data-t'); render(); },
+  tab: el => {
+    const t = el.getAttribute('data-t'); ui.tab = t;
+    if (t === 'quest') { ui.act = null; ui.step = null; }
+    if (t === 'arena') { ui.corr = null; if (ui.duel && ui.duel.done) ui.duel = null; }
+    if (t === 'rev') ui.rev = { phase: 'home', act: 0 };
+    if (!$('#sheet').hidden) closeSheet();
+    render();
+  },
   act: el => { const a = +el.getAttribute('data-a'); if (a > unlockedMax()) { toast('Acte verrouillé : termine le précédent', 'rank'); return; } ui.act = a; ui.step = null; render(); },
   back: () => { ui.act = null; ui.step = null; render(); },
   hub: () => { ui.step = null; render(); },
@@ -4369,7 +4427,7 @@ function initArena() {
       const o = {}; q.docs.forEach(d => { o[d.id] = d.data(); }); AR.players = o; AR.ready = true; rr();
     }, () => { AR.err = 'Classement indisponible pour le moment.'; rr(); });
     DBX.collection('duels').orderBy('t', 'desc').limit(30).onSnapshot(q => {
-      AR.duels = q.docs.map(d => Object.assign({ id: d.id }, d.data())).filter(d => !d.to || d.to === MYID || d.by === MYID); notePending(); rr();
+      AR.duels = q.docs.map(d => Object.assign({ id: d.id }, d.data())).filter(d => !d.to || dTos(d).indexOf(MYID) >= 0 || d.by === MYID); notePending(); rr();
     }, () => { rr(); });
     DBX.collection('scores').onSnapshot(q => {
       const o = {}; q.docs.forEach(d => { o[d.id] = d.data(); }); AR.scores = o; notePending(); rr();
@@ -4393,7 +4451,8 @@ function duelBoard(d) {
   Object.keys(AR.scores).forEach(uid => { const r = AR.scores[uid] && AR.scores[uid]['d_' + d.id]; if (r && typeof r.s === 'number') out.push({ uid: uid, s: r.s, ms: r.ms || 0 }); });
   return out.sort((a, b) => b.s - a.s || a.ms - b.ms);
 }
-function pending() { return AR.duels.filter(d => d.to === MYID && !myDuelScore(d)); }
+function dTos(d) { return Array.isArray(d.tos) && d.tos.length ? d.tos : (d.to ? [d.to] : []); }
+function pending() { return AR.duels.filter(d => dTos(d).indexOf(MYID) >= 0 && !myDuelScore(d)); }
 function notePending() {
   const p = pending(), tab = $('#tabs button[data-t="arena"]');
   if (tab) tab.classList.toggle('ping', p.length > 0);
@@ -4428,7 +4487,7 @@ function viewArena() {
   if (AR.duels.length) h += '<div class="duels">' + AR.duels.slice().sort((x, y) => (y.to === MYID && !myDuelScore(y) ? 1 : 0) - (x.to === MYID && !myDuelScore(x) ? 1 : 0)).map(d => {
     const a = ACTS[(d.act | 0) - 1]; if (!a || !Array.isArray(d.qs)) return '';
     const board = duelBoard(d), mine = myDuelScore(d);
-    return '<div class="duel"><div class="du-top">' + avatar(pav(d.by), 34) + '<div><b>Acte ' + a.num + ' · ' + esc(a.short) + '</b><small>' + (d.to ? (d.to === MYID ? '<span class="perso">Défi personnel</span> de ' + esc(pname(d.by)) : '<span class="perso">Défi personnel</span> pour ' + esc(pname(d.to))) : 'Public · lancé par ' + esc(pname(d.by))) + ' · ' + board.length + ' participant' + (board.length > 1 ? 's' : '') + '</small></div>' +
+    return '<div class="duel"><div class="du-top">' + avatar(pav(d.by), 34) + '<div><b>Acte ' + a.num + ' · ' + esc(a.short) + '</b><small>' + (d.to ? (d.by !== MYID ? '<span class="perso">Défi personnel</span> de ' + esc(pname(d.by)) : '<span class="perso">Défi personnel</span> pour ' + esc(dTos(d).map(pname).join(', '))) : 'Public · lancé par ' + esc(pname(d.by))) + ' · ' + DLV[d.lv || 2] + ' · ' + board.length + ' participant' + (board.length > 1 ? 's' : '') + '</small></div>' +
       (mine ? '<span class="du-me">' + mine.s + '/10</span>' : (a.id <= unlockedMax() ? '<button class="btn sm" data-do="duel-play" data-id="' + esc(d.id) + '">Relever</button>' : '<small class="lockd">Acte verrouillé</small>')) + '</div>' +
       (board.length ? '<ol class="podium">' + board.slice(0, 5).map((r, i) => '<li class="' + (r.uid === MYID ? 'you' : '') + '"><span class="pos">' + (i + 1) + '</span>' + avatar(pav(r.uid), 22) + '<span class="nm">' + esc(pname(r.uid)) + '</span><b>' + r.s + '/10</b><small>' + secs(r.ms) + '</small></li>').join('') + '</ol>' : '') + '</div>';
   }).join('') + '</div>';
@@ -4436,7 +4495,7 @@ function viewArena() {
   // classement
   const list = Object.keys(AR.players).map(id => Object.assign({ id: id }, AR.players[id])).filter(p => p.name).sort((a, b) => (b.xp || 0) - (a.xp || 0));
   h += '<h3>Classement général</h3>' + (list.length ? '<ol class="ladder">' + list.map((p, i) => '<li class="' + (p.id === MYID ? 'you' : '') + '"><span class="pos">' + (i + 1) + '</span>' + avatar(p.av, 36) +
-    '<span class="nm"><b>' + esc(String(p.name).slice(0, 24)) + '</b><small>' + esc(String(p.rank || '')) + ' · ' + (p.done | 0) + '/15 actes</small></span><b class="xp">' + (p.xp | 0) + ' XP</b></li>').join('') + '</ol>' : '<p class="empty">' + gx('Personne encore. {Sois le premier|Sois la première} !') + '</p>');
+    '<span class="nm"><b>' + esc(String(p.name).slice(0, 24)) + '</b><small>' + esc(String(p.rank || '')) + ' · ' + (p.done | 0) + '/' + ACTS.length + ' actes</small></span><b class="xp">' + (p.xp | 0) + ' XP</b></li>').join('') + '</ol>' : '<p class="empty">' + gx('Personne encore. {Sois le premier|Sois la première} !') + '</p>');
   if (typeof ideasSection === 'function') h += ideasSection();
   return h;
 }
@@ -4478,8 +4537,9 @@ Object.assign(DO, {
     if (!v) { toast('Choisis un nom', 'rank'); return; }
     S.prof.name = v; save(); pushPlayer(); toast('Blason enregistré', 'xp'); closeSheet(); render(true);
   },
-  'duel-new': () => { ui.dto = ''; openSheet(duelSheet()); },
-  'duel-to': el => { ui.dto = el.getAttribute('data-v'); openSheet(duelSheet()); },
+  'duel-new': () => { ui.dtos = []; openSheet(duelSheet()); },
+  'duel-lv': el => { ui.dlv = +el.getAttribute('data-v') || 2; openSheet(duelSheet()); },
+  'duel-to': el => { const v = el.getAttribute('data-v'), sel = ui.dtos || (ui.dtos = []); if (!v) ui.dtos = []; else { const i = sel.indexOf(v); if (i >= 0) sel.splice(i, 1); else sel.push(v); } openSheet(duelSheet()); },
   'copy-msg': el => {
     const ta = $('#dmsg'); if (!ta) return;
     try { navigator.clipboard.writeText(ta.value).then(() => { el.textContent = 'Copié'; }, () => { ta.select(); el.textContent = 'Sélectionné : copie-le'; }); } catch (e) { ta.select(); }
@@ -4487,9 +4547,11 @@ Object.assign(DO, {
   'duel-create': async el => {
     const a = +el.getAttribute('data-a'); el.disabled = true;
     try {
-      const qs = sanitizeQs(genQuiz(a));
-      const doc = { by: MYID, act: a, qs: qs, t: Date.now() };
-      if (ui.dto && AR.players[ui.dto] && ui.dto !== MYID) doc.to = ui.dto;
+      const lv = ui.dlv || 2, qs = sanitizeQs(genDuel(a, lv));
+      const doc = { by: MYID, act: a, qs: qs, lv: lv, t: Date.now() };
+      const tos = (ui.dtos || []).filter(id => AR.players[id] && id !== MYID).slice(0, 12);
+      if (tos.length) { doc.to = tos[0]; doc.tos = tos; }
+      noteUsed(a, qs);
       const ref = await DBX.collection('duels').add(doc);
       closeSheet(); startDuel(Object.assign({ id: ref.id }, doc));
     } catch (e) { el.disabled = false; toast(e && e.code === 'invalid_argument' ? 'Ton accès ne permet pas de créer un défi.' : 'Défi impossible à créer, réessaie.', 'rank'); }
@@ -4508,6 +4570,7 @@ Object.assign(DO, {
 });
 function startDuel(d) {
   if (myDuelScore(d)) { toast('Tu as déjà relevé ce défi', 'rank'); return; }
+  if (d.by !== MYID) noteUsed(d.act | 0, d.qs);
   ui.duel = { id: d.id, act: d.act | 0, qs: d.qs.map(q => ({ q: q.q, opts: q.opts, c: q.c, x: q.x })), i: 0, picked: null, score: 0, t0: Date.now(), done: false };
   ui.tab = 'arena'; render();
 }
@@ -4543,21 +4606,49 @@ async function shrinkBlob(file, max, q) {
 
 function duelSheet() {
   const others = Object.keys(AR.players).filter(id => id !== MYID && AR.players[id].name);
-  let h = '<h2>Lancer un défi</h2><p class="hint">Dix questions tirées au sort sur un acte. Le meilleur score gagne, le chrono départage.</p>' +
-    '<h3>Contre qui ?</h3><div class="duel-to"><button class="chip' + (!ui.dto ? ' on' : '') + '" data-do="duel-to" data-v="">Public : tout le monde</button>' +
-    others.map(id => '<button class="chip tochip' + (ui.dto === id ? ' on' : '') + '" data-do="duel-to" data-v="' + esc(id) + '">' + avatar(pav(id), 20) + esc(pname(id)) + '</button>').join('') + '</div>';
+  const sel = ui.dtos || (ui.dtos = []), lv = ui.dlv || 2;
+  let h = '<h2>Lancer un défi</h2><p class="hint">Dix questions tirées au sort sur un acte, différentes de tes défis précédents. Le meilleur score gagne, le chrono départage.</p>' +
+    '<h3>Contre qui ?</h3><p class="hint">Touche plusieurs noms pour défier plusieurs voyageurs à la fois.</p><div class="duel-to"><button class="chip' + (!sel.length ? ' on' : '') + '" data-do="duel-to" data-v="">Public : tout le monde</button>' +
+    others.map(id => '<button class="chip tochip' + (sel.indexOf(id) >= 0 ? ' on' : '') + '" data-do="duel-to" data-v="' + esc(id) + '">' + avatar(pav(id), 20) + esc(pname(id)) + '</button>').join('') + '</div>';
   if (!others.length) h += '<p class="hint">Aucun autre joueur inscrit pour l\'instant.</p>';
+  h += '<h3>Difficulté</h3><div class="seg">' + [1, 2, 3].map(k => '<button class="' + (lv === k ? 'on' : '') + '" data-do="duel-lv" data-v="' + k + '">' + DLV[k] + '</button>').join('') + '</div>' +
+    '<p class="hint">' + ['', 'Les grands personnages et les faits essentiels.', 'Un mélange de personnages, de faits et de mariages.', 'Des dates précises, des alliances et des figures secondaires.'][lv] + '</p>';
   h += '<h3>Sur quel acte ?</h3><div class="duel-acts">' + ACTS.filter(a => a.id <= unlockedMax()).map(a => '<button class="chip" data-do="duel-create" data-a="' + a.id + '">' + a.num + ' · ' + esc(a.short) + '</button>').join('') + '</div>';
   return h;
+}
+const DLV = ['', 'Facile', 'Moyen', 'Difficile'];
+function qLevel(q, hand) {
+  if (hand) return /quelle année|^Quand /i.test(q.q) ? 2 : 1;
+  if (/^En quelle année/.test(q.q)) return 3;
+  if (/^Qui a épousé/.test(q.q)) return 2;
+  if (/^Qui est-ce/.test(q.q)) { const p = PEOPLE.find(x => x.n === q.opts[q.c]); return !p ? 2 : p.lv >= 4 ? 1 : p.lv === 3 ? 2 : 3; }
+  return 3;
+}
+function genDuel(a, lv) {
+  const pool = [], seen = {};
+  const add = (q, hand) => { if (!q || seen[q.q]) return; seen[q.q] = 1; pool.push(Object.assign({}, q, { lv: qLevel(q, hand) })); };
+  QUIZ[a].forEach(q => { const right = q.o[q.c], opts = shuffle(q.o); add({ q: q.q, opts: opts, c: opts.indexOf(right), x: q.x }, true); });
+  for (let k = 0; k < 6; k++) procQuestions(a).forEach(q => add(q, false));
+  S.dq = S.dq || {};
+  const used = S.dq[a] || [];
+  const score = q => (used.indexOf(q.q) >= 0 ? 10 : 0) + Math.abs(q.lv - lv) * 3 + Math.random() * 2.5;
+  const qs = pool.map(q => ({ q: q, s: score(q) })).sort((x, y) => x.s - y.s).slice(0, 10).map(x => x.q);
+  return shuffle(qs);
+}
+function noteUsed(a, qs) {
+  S.dq = S.dq || {};
+  const u = (S.dq[a] || []).filter(t => !qs.some(q => q.q === t)).concat(qs.map(q => q.q));
+  S.dq[a] = u.slice(-80); save();
 }
 function msgBox(d, Q) {
   if (!d) return '';
   const a = ACTS[(d.act | 0) - 1];
   let txt = '';
+  const tos = dTos(d);
   if (d.to && d.by === MYID) txt = 'Je te lance un défi dans le Chronoscope : acte ' + a.num + ' (' + a.short + '). J\'ai fait ' + Q.score + '/10 en ' + secs(Q.ms) + '. Va dans l\'onglet Arène pour le relever !';
-  else if (d.to === MYID) txt = 'J\'ai relevé ton défi du Chronoscope sur l\'acte ' + a.num + ' : ' + Q.score + '/10 en ' + secs(Q.ms) + '.';
+  else if (tos.indexOf(MYID) >= 0) txt = 'J\'ai relevé ton défi du Chronoscope sur l\'acte ' + a.num + ' : ' + Q.score + '/10 en ' + secs(Q.ms) + '.';
   if (!txt) return '';
-  return '<div class="msgbox"><b>Prévenir ' + esc(pname(d.by === MYID ? d.to : d.by)) + '</b><small>Copie ce message et envoie-le par SMS ou WhatsApp.</small><textarea id="dmsg" rows="3" readonly>' + esc(txt) + '</textarea><button class="btn ghost sm" data-do="copy-msg">Copier le message</button></div>';
+  return '<div class="msgbox"><b>Prévenir ' + esc(d.by === MYID ? tos.map(pname).join(', ') : pname(d.by)) + '</b><small>Copie ce message et envoie-le par SMS ou WhatsApp.</small><textarea id="dmsg" rows="3" readonly>' + esc(txt) + '</textarea><button class="btn ghost sm" data-do="copy-msg">Copier le message</button></div>';
 }
 
 /* VERSION SITE (PWA) : compte, notifications, installation, portraits Wikipédia */
@@ -4640,6 +4731,7 @@ Object.assign(DO, {
       if (m === 'signup') await window.CHRONO_AUTH.signUp(email, pass); else await window.CHRONO_AUTH.signIn(email, pass);
       const s2 = await window.CHRONO_SB.auth.getSession();
       if (!(s2.data && s2.data.session)) { openSheet(loginSheet('login', email, 'Compte créé. Confirme ton adresse avec l\'e-mail reçu, puis connecte-toi.')); return; }
+      try { localStorage.setItem('chrono.askPrev', m); } catch (x) { /* ignoré */ }
       location.reload();
     } catch (e) {
       const t = String(e && e.message || '');
@@ -4656,6 +4748,32 @@ Object.assign(DO, {
 });
 /* ouvrir directement l'arène depuis une notification */
 if (location.hash === '#arena') { ui.tab = 'arena'; }
+
+/* ---------- après la connexion : récupérer une ancienne progression ---------- */
+function prevSheet(step) {
+  if (step === 'oui') return '<h2>Récupérer ta progression</h2>' +
+    '<ol class="steps-txt"><li>Ouvre l\'ancienne version du jeu (dans Claude) ou l\'appareil où tu as joué.</li><li>Touche ton nom en haut de l\'écran pour ouvrir ton profil.</li><li>Dans la rubrique « Sauvegarde », touche « Copier le code ».</li><li>Reviens ici, colle le code ci-dessous et touche « Restaurer ».</li></ol>' +
+    '<textarea id="loadcode" rows="3" placeholder="Coller le code de sauvegarde ici"></textarea>' +
+    '<p class="hint">Attention : le code remplace la progression actuelle de ce compte.</p>' +
+    '<div class="nav"><button class="btn ghost" data-do="close">Plus tard</button><button class="btn" data-do="load-save">Restaurer</button></div>' +
+    '<p class="hint">Tu pourras aussi le faire plus tard : Profil, puis Sauvegarde.</p>';
+  return '<h2>Bienvenue dans le Chronoscope</h2><p class="hint">As-tu déjà joué avant, avec un autre compte, dans l\'ancienne version du jeu ou sur un autre appareil ?</p>' +
+    '<div class="gpick"><button class="btn" data-do="prev-yes">Oui, je veux garder mon avancée</button><button class="btn ghost" data-do="close">Non, je commence</button></div>' +
+    '<p class="hint">Si tu as déjà joué avec ce même compte sur un autre appareil, ta progression revient toute seule.</p>';
+}
+Object.assign(DO, { 'prev-yes': () => openSheet(prevSheet('oui')) });
+(function askPrev() {
+  let flag = null; try { flag = localStorage.getItem('chrono.askPrev'); } catch (e) { return; }
+  if (!flag) return;
+  const tryOpen = n => setTimeout(() => {
+    const sh = $('#sheet');
+    if (sh && !sh.hidden) { if (n < 30) tryOpen(n + 1); return; }
+    if (flag === 'login' && S.xp > 0) { try { localStorage.removeItem('chrono.askPrev'); } catch (e) { /* ignoré */ } return; }
+    try { localStorage.removeItem('chrono.askPrev'); } catch (e) { /* ignoré */ }
+    openSheet(prevSheet());
+  }, n ? 1000 : 2500);
+  tryOpen(0);
+})();
 
 /* BOÎTE À IDÉES : propositions, signalements d'erreurs, votes, statuts (admin) */
 const ID = { ideas: [], votes: {}, status: {}, admin: false, on: false, tab: 'idee', showDone: false };
