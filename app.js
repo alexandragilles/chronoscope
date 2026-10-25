@@ -3649,6 +3649,28 @@ function genQuiz(actId) {
 function friseOrder(actId) {
   return FRISE[actId].map((id, i) => ({ id: id, i: i })).sort((a, b) => EV[a.id].y - EV[b.id].y || a.i - b.i).map(o => o.id);
 }
+const QUOTES = [
+  ["Courbe la tête, fier Sicambre ; adore ce que tu as brûlé, brûle ce que tu as adoré.", "remi", "Au baptême de Clovis, selon Grégoire de Tours"],
+  ["Souviens-toi du vase de Soissons.", "clovis", "Selon Grégoire de Tours"],
+  ["Qui m'aime me suive !", "philippe6", "Attribuée, à Cassel en 1328"],
+  ["Si je n'y suis, Dieu m'y mette ; et si j'y suis, Dieu m'y garde.", "jeanne", "À son procès, en 1431"],
+  ["Qui ne sait dissimuler ne sait régner.", "louis11", "Attribuée"],
+  ["De toutes choses ne m'est demeuré que l'honneur et la vie qui est sauve.", "francois1", "Après Pavie, en 1525, souvent résumé en « Tout est perdu, fors l'honneur »"],
+  ["Il n'oserait.", "guise", "Attribuée, à Blois, la veille de son assassinat en 1588"],
+  ["Paris vaut bien une messe.", "henri4", "Attribuée, sans preuve"],
+  ["Je veux qu'il n'y ait si pauvre paysan en mon royaume qu'il n'ait tous les dimanches sa poule en son pot.", "henri4", "Attribuée"],
+  ["Labourage et pâturage sont les deux mamelles dont la France est alimentée.", "sully", "Dans ses Mémoires"],
+  ["Qu'on me donne six lignes écrites de la main du plus honnête homme, j'y trouverai de quoi le faire pendre.", "richelieu", "Attribuée"],
+  ["Ils chantent, ils paieront.", "mazarin", "Attribuée, pendant la Fronde"],
+  ["Je pense, donc je suis.", "descartes", "Discours de la méthode, 1637"],
+  ["L'État, c'est moi.", "louis14", "Attribuée, sans preuve"],
+  ["Je m'en vais, mais l'État demeurera toujours.", "louis14", "Sur son lit de mort, en 1715"],
+  ["Il faut manger pour vivre, et non pas vivre pour manger.", "moliere", "L'Avare, 1668"],
+  ["Pour qu'on ne puisse abuser du pouvoir, il faut que, par la disposition des choses, le pouvoir arrête le pouvoir.", "montesquieu", "De l'esprit des lois, 1748"],
+  ["L'homme est né libre, et partout il est dans les fers.", "rousseau", "Du contrat social, 1762"],
+  ["Écrasez l'infâme.", "voltaire", "Dans sa correspondance, contre le fanatisme"],
+  ["Après nous, le déluge.", "pompadour", "Attribuée, après Rossbach en 1757"]
+];
 const QUIPS = [
   "Le temps, c'est de l'argent. Les Mérovingiens, eux, préféraient les poignards.",
   "Je ne suis pas en retard : c'est le temps qui est en avance.",
@@ -3670,7 +3692,7 @@ const ui = {
   tm: { sub: 'gantt', act: 0, y: 486 },
   ln: { sub: 'tree', root: 'clovis' },
   story: null, talk: null, quiz: null, fr: null, rev: { phase: 'home', act: 0 },
-  quip: QUIPS[Math.floor(Math.random() * QUIPS.length)]
+  quip: QUIPS[Math.floor(Math.random() * QUIPS.length)], qi: Math.floor(Math.random() * QUOTES.length)
 };
 const TABS = ['quest', 'cards', 'time', 'lin', 'rev', 'arena'];
 
@@ -3722,10 +3744,20 @@ function viewQuest() {
   if (ui.step === 'journal') return viewJournal();
   return viewHub();
 }
+function quoteHTML() {
+  const q = QUOTES[ui.qi % QUOTES.length], p = P[q[1]];
+  return '<figure class="quip" id="quote"><blockquote>« ' + esc(q[0]) + ' »</blockquote><figcaption>' + (p ? '<button class="qwho" data-do="person" data-id="' + q[1] + '">' + esc(p.n) + '</button>' : '') + '<small>' + esc(q[2]) + '</small></figcaption></figure>';
+}
+setInterval(() => {
+  const el = $('#quote'); if (!el || document.hidden) return;
+  let n = ui.qi; while (n === ui.qi && QUOTES.length > 1) n = Math.floor(Math.random() * QUOTES.length);
+  el.classList.add('fade');
+  setTimeout(() => { ui.qi = n; const e2 = $('#quote'); if (e2) { e2.outerHTML = quoteHTML(); const e3 = $('#quote'); if (e3) e3.classList.add('fadein'); } }, 450);
+}, 9000);
 function viewActs() {
   const mx = unlockedMax();
   let h = '<section class="intro"><p class="eyebrow">481 à 1789 · seize actes</p><h1>De Clovis à Louis XVI</h1>' +
-    '<p class="quip">« ' + esc(ui.quip) + ' »<br><span>Le Chronoscope</span></p></section><div class="acts">';
+    quoteHTML() + '</section><div class="acts">';
   ACTS.forEach(a => {
     const ch = CHAPTERS.find(c => c.a === a.id);
     if (ch) h += '<div class="chap"><span>Chapitre ' + ch.n + '</span><b>' + esc(ch.t) + '</b><small>' + esc(ch.s) + '</small></div>';
@@ -4143,7 +4175,7 @@ function render(keep) {
   const sx = window.scrollY;
   const ea = ui.tab === 'quest' && ui.act ? eraOf(ui.act) : eraOf(Math.min(unlockedMax(), ACTS.length));
   D.body.setAttribute('data-era', ['medieval', 'renaissance', 'classique'][ea]);
-  v.innerHTML = h;
+  v.innerHTML = h.replace(/(class="back"[^>]*>)‹ /g, '$1<i class="bk" aria-hidden="true"></i>');
   $$('#tabs button').forEach(b => { const on = b.getAttribute('data-t') === ui.tab; b.classList.toggle('on', on); b.setAttribute('aria-current', on ? 'page' : 'false'); });
   if (ui.tab === 'time' && ui.tm.sub === 'gantt') { const B = ganttBounds(), sc = $('#gscroll'); const ac = actOfYear(ui.tm.y); const ga = $('#gact'); if (ga) ga.textContent = ac ? 'Acte ' + ac.num + ' · ' + ac.short : ''; if (sc) sc.scrollLeft = (ui.tm.y - B.lo) * B.ppy - sc.clientWidth / 2; }
   window.scrollTo(0, keep ? sx : 0);
@@ -4179,11 +4211,22 @@ function syncFrise() { const F = ui.fr; if (!F) return; F.order = $$('#frl .fr-i
 /* ---------- actions ---------- */
 const DO = {
   tab: el => {
-    const t = el.getAttribute('data-t'); ui.tab = t;
-    if (t === 'quest') { ui.act = null; ui.step = null; }
-    if (t === 'arena') { ui.corr = null; if (ui.duel && ui.duel.done) ui.duel = null; }
-    if (t === 'rev') ui.rev = { phase: 'home', act: 0 };
+    const t = el.getAttribute('data-t');
     if (!$('#sheet').hidden) closeSheet();
+    if (t !== ui.tab) { ui.tab = t; render(); return; }
+    /* même onglet : on remonte d'une étape */
+    if (t === 'quest') {
+      if (ui.step === 'voyage' && ui.vy && ui.vy.mode === 'scene') { ui.vy = { id: ui.vy.id, mode: 'home' }; }
+      else if (ui.step === 'journal' && ui.vy && ui.vy.id) { ui.step = 'voyage'; ui.vy = { id: ui.vy.id, mode: 'home' }; }
+      else if (ui.step) ui.step = null;
+      else ui.act = null;
+    }
+    if (t === 'arena') {
+      if (ui.corr && ui.corr.with) ui.corr = { with: '' };
+      else if (ui.corr) ui.corr = null;
+      else if (ui.duel && ui.duel.done) ui.duel = null;
+    }
+    if (t === 'rev' && ui.rev && ui.rev.phase !== 'home') ui.rev = { phase: 'home', act: 0 };
     render();
   },
   act: el => { const a = +el.getAttribute('data-a'); if (a > unlockedMax()) { toast('Acte verrouillé : termine le précédent', 'rank'); return; } ui.act = a; ui.step = null; render(); },

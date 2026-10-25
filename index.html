@@ -542,6 +542,19 @@ body[data-era="renaissance"] #head, body[data-era="classique"] #head { border-bo
 .back { display: inline-flex; align-items: center; gap: 6px; font-size: .86rem; font-weight: 700; color: var(--accent); background: var(--card); border: 2px solid var(--accent); border-radius: 999px; padding: 7px 16px 7px 12px; margin: 2px 0 14px; box-shadow: var(--shadow); cursor: pointer; }
 .back:active { transform: translateY(1px); }
 .steps-txt { padding-left: 20px; line-height: 1.6; margin: 8px 0 12px; }
+/* bouton retour, version sobre */
+.back { display: inline-flex; align-items: center; gap: 10px; background: none; border: 0; box-shadow: none; padding: 4px 2px; margin: 0 0 12px; border-radius: 0; color: var(--ink2); font-family: var(--fh); font-size: .78rem; font-weight: 400; letter-spacing: .1em; text-transform: uppercase; }
+.back .bk { width: 30px; height: 30px; flex: none; border-radius: 50%; border: 1px solid var(--gold); background: var(--card); box-shadow: 0 1px 3px rgba(60,40,10,.15); position: relative; transition: transform .15s; }
+.back .bk::before { content: ''; position: absolute; left: 12px; top: 10px; width: 8px; height: 8px; border-left: 2px solid var(--accent); border-bottom: 2px solid var(--accent); transform: rotate(45deg); }
+.back:hover .bk, .back:active .bk { transform: translateX(-2px); }
+/* citations */
+.quip { margin: 10px 0 0; transition: opacity .45s; }
+.quip.fade { opacity: 0; } .quip.fadein { animation: qin .5s ease-out; }
+@keyframes qin { from { opacity: 0; transform: translateY(4px); } }
+.quip blockquote { margin: 0; font-style: italic; font-size: 1.05rem; line-height: 1.5; color: var(--ink); }
+.quip figcaption { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; margin-top: 6px; }
+.qwho { font-family: var(--fh); font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; }
+.quip small { color: var(--ink2); font-size: .78rem; }
 </style>
 <header id="head"></header>
 <main id="view"></main>
@@ -550,7 +563,7 @@ body[data-era="renaissance"] #head, body[data-era="classique"] #head { border-bo
 <div id="toasts" aria-live="polite"></div>
 <script src="supabase.js"></script>
 <script src="config.js"></script>
-<script src="shim.js?v=mvo7ixmm"></script>
-<script src="app.js?v=mvo7ixmm"></script>
+<script src="shim.js?v=mvo8fq05"></script>
+<script src="app.js?v=mvo8fq05"></script>
 </body>
 </html>
