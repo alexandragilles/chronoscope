@@ -5,6 +5,7 @@
   const ok = CFG.supabaseUrl && CFG.supabaseKey && window.supabase && window.supabase.createClient;
   const sb = ok ? window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey, { auth: { persistSession: true, autoRefreshToken: true } }) : null;
   window.CHRONO_SB = sb;
+  if (sb) sb.auth.onAuthStateChange(ev => { if (ev === 'PASSWORD_RECOVERY') { window.CHRONO_RECOVERY = true; window.dispatchEvent(new Event('chrono-recovery')); } });
 
   let sessionP = null;
   function session() {
@@ -91,6 +92,10 @@
     sendCode: async (email) => { const r = await sb.auth.signInWithOtp({ email: email, options: { shouldCreateUser: true } }); if (r.error) throw r.error; },
     verify: async (email, code) => { const r = await sb.auth.verifyOtp({ email: email, token: code, type: 'email' }); if (r.error) throw r.error; return r.data; },
     signOut: async () => { await sb.auth.signOut(); },
+    sendReset: async (email) => { const r = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname }); if (r.error) throw r.error; },
+    setPassword: async (pass) => { const r = await sb.auth.updateUser({ password: pass }); if (r.error) throw r.error; },
+    deleteAccount: async () => { const r = await sb.rpc('delete_my_account'); if (r.error) throw r.error; await sb.auth.signOut(); },
+    recovery: /type=recovery/.test(location.hash),
     email: async () => { const s = await session(); return s ? s.user.email : null; }
   };
 

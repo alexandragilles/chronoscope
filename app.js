@@ -4737,6 +4737,7 @@ function accountHTML() {
   if (!acctEmail) return '<h3>Compte</h3>' + loginCard();
   let h = '<h3>Compte</h3><p class="hint">Compte : ' + esc(acctEmail) + '</p>';
   h += '<div class="nav" style="justify-content:flex-start">' + pushButton() + '<button class="btn ghost sm" data-do="logout">Se déconnecter</button></div>';
+  h += '<div class="nav" style="justify-content:flex-start"><button class="btn ghost sm danger" data-do="acct-del">Supprimer mon compte</button></div>';
   return h;
 }
 function pushButton() {
@@ -4759,6 +4760,7 @@ function loginSheet(mode, email, msg) {
     '<input id="lemail" type="email" autocomplete="email" placeholder="ton@email.fr" class="field" value="' + esc(email || '') + '">' +
     '<input id="lpass" type="password" autocomplete="' + (signup ? 'new-password' : 'current-password') + '" placeholder="Mot de passe" class="field">' +
     (msg ? '<p class="note">' + esc(msg) + '</p>' : '') +
+    (signup ? '' : '<button class="lnk" data-do="pw-forgot">Mot de passe oublié ?</button>') +
     '<div class="nav"><button class="btn ghost" data-do="login-mode" data-m="' + (signup ? 'login' : 'signup') + '">' + (signup ? 'J\'ai déjà un compte' : 'Créer un compte') + '</button>' +
     '<button class="btn" data-do="login-go" data-m="' + (signup ? 'signup' : 'login') + '">' + (signup ? 'Créer' : 'Se connecter') + '</button></div>';
 }
@@ -4817,6 +4819,59 @@ Object.assign(DO, { 'prev-yes': () => openSheet(prevSheet('oui')) });
   }, n ? 1000 : 2500);
   tryOpen(0);
 })();
+
+/* ---------- mot de passe oublié ---------- */
+function forgotSheet(email, msg, sent) {
+  if (sent) return '<h2>E-mail envoyé</h2><p class="hint">Si un compte existe pour <b>' + esc(email) + '</b>, un lien vient d\'y être envoyé. Ouvre-le depuis ce téléphone : tu pourras choisir un nouveau mot de passe. Pense à regarder dans les courriers indésirables.</p><div class="nav"><button class="btn" data-do="close">Compris</button></div>';
+  return '<h2>Mot de passe oublié</h2><p class="hint">Indique l\'e-mail de ton compte. Tu recevras un lien pour choisir un nouveau mot de passe. Ta progression est conservée.</p>' +
+    '<input id="femail" type="email" autocomplete="email" placeholder="ton@email.fr" class="field" value="' + esc(email || '') + '">' +
+    (msg ? '<p class="note">' + esc(msg) + '</p>' : '') +
+    '<div class="nav"><button class="btn ghost" data-do="login-open">Retour</button><button class="btn" data-do="pw-send">Envoyer le lien</button></div>';
+}
+function newPassSheet(msg) {
+  return '<h2>Nouveau mot de passe</h2><p class="hint">Choisis un nouveau mot de passe (8 caractères minimum).</p>' +
+    '<input id="np1" type="password" autocomplete="new-password" placeholder="Nouveau mot de passe" class="field">' +
+    '<input id="np2" type="password" autocomplete="new-password" placeholder="Confirme-le" class="field">' +
+    (msg ? '<p class="note">' + esc(msg) + '</p>' : '') +
+    '<div class="nav"><button class="btn" data-do="pw-set">Enregistrer</button></div>';
+}
+function delSheet(msg) {
+  return '<h2>Supprimer mon compte</h2><p class="hint">Ton compte, ta progression, ton blason, tes défis et tes missives seront effacés définitivement. Cette action ne peut pas être annulée.</p>' +
+    '<p class="hint">Pour confirmer, écris <b>SUPPRIMER</b> ci-dessous.</p><input id="delc" class="field" autocomplete="off" placeholder="SUPPRIMER">' +
+    (msg ? '<p class="note">' + esc(msg) + '</p>' : '') +
+    '<div class="nav"><button class="btn ghost" data-do="close">Annuler</button><button class="btn danger" data-do="acct-del-go">Supprimer définitivement</button></div>';
+}
+Object.assign(DO, {
+  'pw-forgot': () => openSheet(forgotSheet(($('#lemail') || {}).value || '')),
+  'pw-send': async el => {
+    const email = ($('#femail').value || '').trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { openSheet(forgotSheet(email, 'Adresse e-mail invalide.')); return; }
+    el.disabled = true; el.textContent = 'Envoi…';
+    try { await window.CHRONO_AUTH.sendReset(email); openSheet(forgotSheet(email, '', true)); }
+    catch (e) { openSheet(forgotSheet(email, /rate|seconds/i.test(String(e && e.message)) ? 'Trop de demandes : réessaie dans quelques minutes.' : 'Envoi impossible : ' + (e && e.message || ''))); }
+  },
+  'pw-set': async el => {
+    const a = $('#np1').value || '', b = $('#np2').value || '';
+    if (a.length < 8) { openSheet(newPassSheet('Le mot de passe doit faire au moins 8 caractères.')); return; }
+    if (a !== b) { openSheet(newPassSheet('Les deux mots de passe ne sont pas identiques.')); return; }
+    el.disabled = true; el.textContent = '…';
+    try { await window.CHRONO_AUTH.setPassword(a); history.replaceState(null, '', location.pathname); closeSheet(); toast('Mot de passe modifié', 'xp'); }
+    catch (e) { openSheet(newPassSheet('Échec : ' + (e && e.message || '') + '. Redemande un lien si celui-ci a expiré.')); }
+  },
+  'acct-del': () => openSheet(delSheet()),
+  'acct-del-go': async el => {
+    if (($('#delc').value || '').trim().toUpperCase() !== 'SUPPRIMER') { openSheet(delSheet('Écris SUPPRIMER pour confirmer.')); return; }
+    el.disabled = true; el.textContent = 'Suppression…';
+    try {
+      await window.CHRONO_AUTH.deleteAccount();
+      try { localStorage.removeItem(KEY); localStorage.removeItem('chronoscope.lettresLues'); } catch (e) { /* ignoré */ }
+      location.reload();
+    } catch (e) { openSheet(delSheet('Suppression impossible : ' + (e && e.message || ''))); }
+  }
+});
+function openRecovery() { setTimeout(() => openSheet(newPassSheet()), 1200); }
+if (window.CHRONO_AUTH && window.CHRONO_AUTH.recovery) openRecovery();
+else window.addEventListener('chrono-recovery', openRecovery, { once: true });
 
 /* BOÎTE À IDÉES : propositions, signalements d'erreurs, votes, statuts (admin) */
 const ID = { ideas: [], votes: {}, status: {}, admin: false, on: false, tab: 'idee', showDone: false };
