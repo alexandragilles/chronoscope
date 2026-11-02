@@ -4855,7 +4855,7 @@ Object.assign(DO, {
     if (a.length < 8) { openSheet(newPassSheet('Le mot de passe doit faire au moins 8 caractères.')); return; }
     if (a !== b) { openSheet(newPassSheet('Les deux mots de passe ne sont pas identiques.')); return; }
     el.disabled = true; el.textContent = '…';
-    try { await window.CHRONO_AUTH.setPassword(a); history.replaceState(null, '', location.pathname); closeSheet(); toast('Mot de passe modifié', 'xp'); }
+    try { await window.CHRONO_AUTH.setPassword(a); try { sessionStorage.removeItem('chrono.recovery'); } catch (x) { /* ignoré */ } history.replaceState(null, '', location.pathname); closeSheet(); toast('Mot de passe modifié', 'xp'); setTimeout(() => location.reload(), 900); }
     catch (e) { openSheet(newPassSheet('Échec : ' + (e && e.message || '') + '. Redemande un lien si celui-ci a expiré.')); }
   },
   'acct-del': () => openSheet(delSheet()),
@@ -4870,7 +4870,11 @@ Object.assign(DO, {
   }
 });
 function openRecovery() { setTimeout(() => openSheet(newPassSheet()), 1200); }
-if (window.CHRONO_AUTH && window.CHRONO_AUTH.recovery) openRecovery();
+if (window.CHRONO_AUTH && window.CHRONO_AUTH.linkError) {
+  setTimeout(() => openSheet('<h2>Lien expiré</h2><p class="hint">Ce lien de réinitialisation a expiré ou a déjà été utilisé (un lien ne fonctionne qu\'une fois). Redemande un lien et ouvre-le tout de suite.</p><p class="hint"><small>' + esc(window.CHRONO_AUTH.linkError) + '</small></p><div class="nav"><button class="btn" data-do="pw-forgot">Redemander un lien</button></div>'), 1200);
+  try { sessionStorage.removeItem('chrono.recovery'); history.replaceState(null, '', location.pathname); } catch (e) { /* ignoré */ }
+}
+else if (window.CHRONO_AUTH && window.CHRONO_AUTH.recovery) openRecovery();
 else window.addEventListener('chrono-recovery', openRecovery, { once: true });
 
 /* BOÎTE À IDÉES : propositions, signalements d'erreurs, votes, statuts (admin) */

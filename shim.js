@@ -4,6 +4,10 @@
   const CFG = window.CHRONO_CONFIG || {};
   const ok = CFG.supabaseUrl && CFG.supabaseKey && window.supabase && window.supabase.createClient;
   const sb = ok ? window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey, { auth: { persistSession: true, autoRefreshToken: true } }) : null;
+  const H = location.hash || '';
+  let REC = /type=recovery/.test(H), LERR = '';
+  try { if (REC) sessionStorage.setItem('chrono.recovery', '1'); else if (sessionStorage.getItem('chrono.recovery')) REC = true; } catch (e) { /* ignoré */ }
+  if (/error_code=|error=/.test(H)) { const m = H.match(/error_description=([^&]*)/); LERR = m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : 'lien invalide'; }
   window.CHRONO_SB = sb;
   if (sb) sb.auth.onAuthStateChange(ev => { if (ev === 'PASSWORD_RECOVERY') { window.CHRONO_RECOVERY = true; window.dispatchEvent(new Event('chrono-recovery')); } });
 
@@ -95,7 +99,8 @@
     sendReset: async (email) => { const r = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname }); if (r.error) throw r.error; },
     setPassword: async (pass) => { const r = await sb.auth.updateUser({ password: pass }); if (r.error) throw r.error; },
     deleteAccount: async () => { const r = await sb.rpc('delete_my_account'); if (r.error) throw r.error; await sb.auth.signOut(); },
-    recovery: /type=recovery/.test(location.hash),
+    recovery: REC,
+    linkError: LERR,
     email: async () => { const s = await session(); return s ? s.user.email : null; }
   };
 
@@ -126,7 +131,7 @@
     const cur = (document.querySelector('script[src^="app.js"]') || {}).getAttribute && document.querySelector('script[src^="app.js"]').getAttribute('src');
     fetch('index.html?u=' + Date.now(), { cache: 'no-store' }).then(r => r.text()).then(t => {
       const m = t.match(/src="(app\.js\?v=[^"]+)"/);
-      if (m && cur && m[1] !== cur) {
+      if (m && cur && m[1] !== cur && !REC && !/access_token|type=recovery/.test(location.hash)) {
         const reg = navigator.serviceWorker && navigator.serviceWorker.getRegistration ? navigator.serviceWorker.getRegistration() : Promise.resolve(null);
         reg.then(g => g && g.update()).catch(() => {}).then(() => { try { if (sessionStorage.getItem('chrono.upd') === m[1]) return; sessionStorage.setItem('chrono.upd', m[1]); } catch (e) { return; } location.reload(); });
       }
