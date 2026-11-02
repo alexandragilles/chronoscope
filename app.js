@@ -4837,7 +4837,8 @@ function newPassSheet(msg) {
 }
 function delSheet(msg) {
   return '<h2>Supprimer mon compte</h2><p class="hint">Ton compte, ta progression, ton blason, tes défis et tes missives seront effacés définitivement. Cette action ne peut pas être annulée.</p>' +
-    '<p class="hint">Pour confirmer, écris <b>SUPPRIMER</b> ci-dessous.</p><input id="delc" class="field" autocomplete="off" placeholder="SUPPRIMER">' +
+    '<p class="hint">Pour confirmer, écris <b>SUPPRIMER</b> puis ton mot de passe.</p><input id="delc" class="field" autocomplete="off" placeholder="SUPPRIMER">' +
+    '<input id="delp" type="password" class="field" autocomplete="current-password" placeholder="Mot de passe">' +
     (msg ? '<p class="note">' + esc(msg) + '</p>' : '') +
     '<div class="nav"><button class="btn ghost" data-do="close">Annuler</button><button class="btn danger" data-do="acct-del-go">Supprimer définitivement</button></div>';
 }
@@ -4861,7 +4862,11 @@ Object.assign(DO, {
   'acct-del': () => openSheet(delSheet()),
   'acct-del-go': async el => {
     if (($('#delc').value || '').trim().toUpperCase() !== 'SUPPRIMER') { openSheet(delSheet('Écris SUPPRIMER pour confirmer.')); return; }
-    el.disabled = true; el.textContent = 'Suppression…';
+    const pw = ($('#delp').value || '');
+    if (!pw) { openSheet(delSheet('Entre ton mot de passe.')); return; }
+    el.disabled = true; el.textContent = 'Vérification…';
+    try { await window.CHRONO_AUTH.checkPassword(pw); } catch (e) { openSheet(delSheet('Mot de passe incorrect. Rien n\'a été supprimé.')); return; }
+    el.textContent = 'Suppression…';
     try {
       await window.CHRONO_AUTH.deleteAccount();
       try { localStorage.removeItem(KEY); localStorage.removeItem('chronoscope.lettresLues'); } catch (e) { /* ignoré */ }

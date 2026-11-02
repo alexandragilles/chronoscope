@@ -98,6 +98,7 @@
     signOut: async () => { await sb.auth.signOut(); },
     sendReset: async (email) => { const r = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname }); if (r.error) throw r.error; },
     setPassword: async (pass) => { const r = await sb.auth.updateUser({ password: pass }); if (r.error) throw r.error; },
+    checkPassword: async (pass) => { const s = await session(); const em = s && s.user && s.user.email; if (!em) throw new Error('session'); const r = await sb.auth.signInWithPassword({ email: em, password: pass }); if (r.error) throw r.error; },
     deleteAccount: async () => { const r = await sb.rpc('delete_my_account'); if (r.error) throw r.error; await sb.auth.signOut(); },
     recovery: REC,
     linkError: LERR,
